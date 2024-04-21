@@ -5,16 +5,19 @@ from openai import OpenAI
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+messages = [
+    {"role": "system", "content": "You are a friendly Spanish-speaking chatbot."},
+]
 
 def create_chatbot_response(prompt):
+    messages.append({"role": "user", "content": prompt})
     response = client.chat.completions.create(
         model="gpt-4",
-        messages=[
-            {"role": "system", "content": "You are a friendly Spanish-speaking chatbot."},
-            {"role": "user", "content": prompt},
-        ]
+        messages=messages
     )
-    return response.choices[0].message.content
+    content = response.choices[0].message.content
+    messages.append({"role": "system", "content": content})
+    return content
 
 def main():
     print("welcome to the langbud - the spanish teach chatbot!")
