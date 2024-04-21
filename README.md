@@ -1,12 +1,12 @@
 # langbud - a spanish teaching companion 
 
-#### requirements
+### Requirements
 You will need to install the following on your machine:
 - python
 - pip
 - virtualenv
 
-### installation
+### Installation
 To install the application, run the following commands from the root directory of this repository:
 ```bash
 # create a virtualenv
@@ -22,7 +22,7 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### start
+### Start
 To start the application, run the following command:
 ```bash
 python src/main.py
