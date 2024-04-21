@@ -1,19 +1,20 @@
 import os
 
-import openai
-
 from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def create_chatbot_response(prompt):
-    openai.api_key = os.getenv("OPENAI_API_KEY")
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a friendly Spanish-speaking chatbot."},
             {"role": "user", "content": prompt},
         ]
     )
-    return response.choices[0].message['content']
+    return response.choices[0].message.content
 
 def main():
     print("welcome to the langbud - the spanish teach chatbot!")
