@@ -1,0 +1,16 @@
+# Ignore virtual environment files
+venv/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore development and debugging files
+*.log
+*.vscode/
+*.idea/
+
+# Ignore any other build artifacts or temporary files
+*.bak
+*.swp
+.DS_Store
