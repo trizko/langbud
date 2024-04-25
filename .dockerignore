@@ -15,7 +15,11 @@ __pycache__/
 *.swp
 .DS_Store
 
-# Ignore git and repo related files
+# Ignore repo related files and dot files
 README.md
 LICENSE
 Dockerfile
+.git
+.gitignore
+.dockerignore
+.env.template
