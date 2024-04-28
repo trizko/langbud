@@ -3,5 +3,4 @@ langchain
 langchain-openai
 openai
 python-dotenv
-twilio
 uvicorn
