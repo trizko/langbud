@@ -1,9 +1,11 @@
 import os
 import logging
 
+import asyncio
 import discord
 import uvicorn
 
+from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from openai import OpenAI
@@ -55,7 +57,19 @@ async def on_message(message):
         await message.channel.send(create_chatbot_response(message.content))
 
 # Setup FastAPI app
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Start the discord client in a separate task
+    task = asyncio.create_task(discord_client.start(os.getenv('DISCORD_BOT_TOKEN')))
+    yield
+    # Shutdown the discord client
+    task.cancel()
+    try:
+        await task
+    except asyncio.CancelledError:
+        pass
+
+app = FastAPI(lifespan=lifespan)
 
 class UserMessage(BaseModel):
     prompt: str
@@ -68,5 +82,4 @@ async def generate_text(message: UserMessage):
     return Response(message=create_chatbot_response(message.prompt))
 
 if __name__ == "__main__":
-    # uvicorn.run(app, host="0.0.0.0", port=8000)
-    discord_client.run(os.getenv('DISCORD_BOT_TOKEN'))
+    uvicorn.run(app, host="0.0.0.0", port=8000)
