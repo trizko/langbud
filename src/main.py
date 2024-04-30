@@ -48,11 +48,11 @@ async def on_message(message):
 
     # Respond to direct messages
     if isinstance(message.channel, discord.DMChannel):
-        await message.channel.send('Hello! How can I help you today?')
+        await message.channel.send(create_chatbot_response(message.content))
 
     # Respond to mentions
     if discord_client.user in message.mentions:
-        await message.channel.send('You mentioned me!')
+        await message.channel.send(create_chatbot_response(message.content))
 
 # Setup FastAPI app
 app = FastAPI()
