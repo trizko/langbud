@@ -2,8 +2,10 @@ import os
 import logging
 
 import asyncio
-import discord
 import uvicorn
+
+import discord
+from discord import app_commands
 
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
@@ -38,9 +40,18 @@ intents = discord.Intents.default()
 intents.messages = True
 intents.message_content = True
 discord_client = discord.Client(intents=intents)
+tree = app_commands.CommandTree(discord_client)
+
+@tree.command(
+    name="explain",
+    description="explains the chatbots last response in detail"
+)
+async def explain(interaction):
+    await interaction.response.send_message("this is a slash command!")
 
 @discord_client.event
 async def on_ready():
+    await tree.sync()
     print(f'We have logged in as {discord_client.user}')
 
 @discord_client.event
