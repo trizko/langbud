@@ -23,6 +23,9 @@ openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 messages = [
     {"role": "system", "content": "You are a friendly Spanish-speaking chatbot. Your task is to help the user learn Spanish. You should continue the conversation in Spanish, but if the user makes a mistake, correct them in English."},
 ]
+explain_messages = [
+    {"role": "system", "content": "You are a friendly Spanish-teaching chatbot. You take the users Spanish messages and explain them word for word in English. Also, include ways you can respond to this message in Spanish."},
+]
 
 def create_chatbot_response(prompt):
     messages.append({"role": "user", "content": prompt})
@@ -31,7 +34,19 @@ def create_chatbot_response(prompt):
         messages=messages
     )
     content = response.choices[0].message.content
-    messages.append({"role": "system", "content": content})
+    messages.append({"role": "assistant", "content": content})
+
+    return content
+
+def chatbot_explain():
+    latest_message = messages[-1]
+    explain_messages.append({"role": "user", "content": latest_message["content"]})
+    response = openai_client.chat.completions.create(
+        model="gpt-4",
+        messages=explain_messages
+    )
+    content = response.choices[0].message.content
+    explain_messages.pop()
 
     return content
 
@@ -47,12 +62,14 @@ tree = app_commands.CommandTree(discord_client)
     description="explains the chatbots last response in detail"
 )
 async def explain(interaction):
-    await interaction.response.send_message("this is a slash command!")
+    await interaction.response.defer()
+    explanation = chatbot_explain()
+    await interaction.followup.send(explanation)
 
 @discord_client.event
 async def on_ready():
     await tree.sync()
-    print(f'We have logged in as {discord_client.user}')
+    logger.info(f'Discord bot logged in as {discord_client.user}')
 
 @discord_client.event
 async def on_message(message):
