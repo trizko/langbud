@@ -5,4 +5,5 @@ langchain-openai
 openai
 python-dotenv
 redis-py-cluster
+ruff
 uvicorn
