@@ -19,6 +19,7 @@ __pycache__/
 README.md
 LICENSE
 Dockerfile
+docker-compose.yml
 .git
 .gitignore
 .dockerignore
