@@ -17,7 +17,7 @@ resource "digitalocean_droplet" "web_server" {
   region = "sfo3"
   size   = "s-1vcpu-1gb"
 
-  user_data = file("${path.module}/user-data.sh")
+  user_data = templatefile("${path.module}/user-data.tpl", { DO_TOKEN = var.do_token })
 
   ssh_keys = [
     var.ssh_fingerprint
