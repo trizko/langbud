@@ -12,7 +12,7 @@ provider "digitalocean" {
 }
 
 resource "digitalocean_droplet" "web_server" {
-  name   = "web-server"
+  name   = "langbud-server"
   image  = "debian-10-x64"
   region = "sfo3"
   size   = "s-1vcpu-1gb"
