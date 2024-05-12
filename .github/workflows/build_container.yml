@@ -1,0 +1,42 @@
+name: "Build and push container image"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+      - name: Checkout the repo 
+        uses: actions/checkout@v4
+
+      - name: Install doctl 
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Create and populate .env file
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+        run: |
+          # create .env file with secrets
+          cat <<EOF > .env
+          OPENAI_API_KEY="$OPENAI_API_KEY"
+          DISCORD_BOT_TOKEN="$DISCORD_BOT_TOKEN"
+          EOF
+
+      - name: Build image 
+        run: docker build -t ai-stuff-registry/langbud-server .
+
+      - name: Log in to DO Container Registry 
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Tag image 
+        run: docker tag ai-stuff-registry/langbud-server registry.digitalocean.com/ai-stuff-registry/langbud-server:latest
+
+      - name: Push image to DO Container Registry 
+        run: docker push registry.digitalocean.com/ai-stuff-registry/langbud-server:latest
