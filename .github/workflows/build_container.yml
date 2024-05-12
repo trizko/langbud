@@ -40,3 +40,6 @@ jobs:
 
       - name: Push image to DO Container Registry 
         run: docker push registry.digitalocean.com/ai-stuff-registry/langbud-server:latest
+
+      - name: Clean up DO Container Registry
+        run: doctl registry garbage-collection start --include-untagged-manifests --force
