@@ -18,7 +18,7 @@ $$ LANGUAGE plpgsql;
 
 -- Trigger to update modified_at
 CREATE TRIGGER update_modified_at_before_update
-BEFORE UPDATE ON ratings
+BEFORE UPDATE ON users
 FOR EACH ROW
 EXECUTE FUNCTION update_modified_at();
 
