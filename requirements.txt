@@ -1,3 +1,4 @@
+dbmt @ git+https://github.com/trizko/dbmt
 discord.py
 fastapi
 langchain
