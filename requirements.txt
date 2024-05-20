@@ -1,8 +1,6 @@
 dbmt @ git+https://github.com/trizko/dbmt
 discord.py
 fastapi
-langchain
-langchain-openai
 openai
 python-dotenv
 redis-py-cluster
