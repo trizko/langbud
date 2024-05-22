@@ -19,7 +19,7 @@ provider "digitalocean" {
   token = var.do_token
 }
 
-resource "digitalocean_database_cluster" "db_cluster" {
+resource "digitalocean_database_cluster" "db-cluster" {
   name       = "langbud-db"
   engine     = "pg"
   version    = "15"

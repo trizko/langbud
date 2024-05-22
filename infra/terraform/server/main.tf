@@ -19,7 +19,7 @@ provider "digitalocean" {
   token = var.do_token
 }
 
-resource "digitalocean_droplet" "web_server" {
+resource "digitalocean_droplet" "langbud-server" {
   name   = "langbud-server"
   image  = "debian-10-x64"
   region = "sfo3"
