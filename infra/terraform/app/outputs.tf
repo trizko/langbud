@@ -1,20 +1,20 @@
-output "ip_address" {
+output "server_ip" {
   value = digitalocean_droplet.langbud-server.ipv4_address
 }
 
-output "host" {
+output "db_host" {
   value = digitalocean_database_cluster.db-cluster.host
 }
 
-output "port" {
+output "db_port" {
   value = digitalocean_database_cluster.db-cluster.port
 }
 
-output "username" {
+output "db_username" {
   value = digitalocean_database_cluster.db-cluster.user
 }
 
-output "password" {
+output "db_password" {
   value = digitalocean_database_cluster.db-cluster.password
   sensitive = true
 }
