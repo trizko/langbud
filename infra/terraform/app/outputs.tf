@@ -1,3 +1,7 @@
+output "ip_address" {
+  value = digitalocean_droplet.langbud-server.ipv4_address
+}
+
 output "host" {
   value = digitalocean_database_cluster.db-cluster.host
 }

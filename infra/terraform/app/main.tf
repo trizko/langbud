@@ -7,7 +7,7 @@ terraform {
   }
   backend "s3" {
     endpoint                    = "sfo3.digitaloceanspaces.com"
-    key                         = "langbud-db.tfstate"
+    key                         = "langbud-app.tfstate"
     bucket                      = "langbud-terraform-state"
     region                      = "us-east-1"
     skip_credentials_validation = true
@@ -17,6 +17,19 @@ terraform {
 
 provider "digitalocean" {
   token = var.do_token
+}
+
+resource "digitalocean_droplet" "langbud-server" {
+  name   = "langbud-server"
+  image  = "debian-10-x64"
+  region = "sfo3"
+  size   = "s-1vcpu-1gb"
+
+  user_data = templatefile("${path.module}/user-data.tpl", { DO_TOKEN = var.do_token })
+
+  ssh_keys = [
+    var.ssh_fingerprint
+  ]
 }
 
 resource "digitalocean_database_cluster" "db-cluster" {
