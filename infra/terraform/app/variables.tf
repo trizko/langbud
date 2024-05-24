@@ -9,3 +9,9 @@ variable "ssh_fingerprint" {
   default     = ""
   description = "SSH Key Fingerprint"
 }
+
+variable "ci_cd_ssh_public_key" {
+  type        = string
+  default     = ""
+  description = "CI/CD SSH Public Key"
+}

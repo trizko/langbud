@@ -29,7 +29,7 @@ resource "digitalocean_droplet" "langbud-server" {
   region = "sfo3"
   size   = "s-1vcpu-1gb"
 
-  user_data = templatefile("${path.module}/user-data.tpl", { DO_TOKEN = var.do_token })
+  user_data = templatefile("${path.module}/user-data.tpl", { DO_TOKEN = var.do_token, CI_CD_SSH_PUBLIC_KEY = var.ci_cd_ssh_public_key })
 
   ssh_keys = [
     var.ssh_fingerprint

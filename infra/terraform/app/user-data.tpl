@@ -12,6 +12,9 @@ USERNAME=langbud-server
 # user.
 COPY_AUTHORIZED_KEYS_FROM_ROOT=true
 
+OTHER_PUBLIC_KEYS_TO_ADD=(
+    "${CI_CD_SSH_PUBLIC_KEY}"
+)
 
 ####################
 ### SCRIPT LOGIC ###
@@ -29,6 +32,11 @@ mkdir --parents "$home_directory/.ssh"
 if [ "$COPY_AUTHORIZED_KEYS_FROM_ROOT" = true ]; then
     cp /root/.ssh/authorized_keys "$home_directory/.ssh"
 fi
+
+# Add additional provided public keys
+for pub_key in "${OTHER_PUBLIC_KEYS_TO_ADD[@]}"; do
+    echo "${pub_key}" >> "${home_directory}/.ssh/authorized_keys"
+done
 
 # Adjust SSH configuration ownership and permissions
 chmod 0700 "$home_directory/.ssh"
