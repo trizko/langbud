@@ -19,8 +19,12 @@ provider "digitalocean" {
   token = var.do_token
 }
 
+locals {
+  environment = terraform.workspace == "default" ? "dev" : terraform.workspace
+}
+
 resource "digitalocean_droplet" "langbud-server" {
-  name   = "langbud-server"
+  name   = "langbud-server-${local.environment}"
   image  = "debian-10-x64"
   region = "sfo3"
   size   = "s-1vcpu-1gb"
@@ -33,7 +37,7 @@ resource "digitalocean_droplet" "langbud-server" {
 }
 
 resource "digitalocean_database_cluster" "db-cluster" {
-  name       = "langbud-db"
+  name       = "langbud-db-cluster-${local.environment}"
   engine     = "pg"
   version    = "15"
   size       = "db-s-1vcpu-2gb"
