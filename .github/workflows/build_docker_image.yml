@@ -48,13 +48,12 @@ jobs:
       - name: Log in to DO Container Registry 
         run: doctl registry login --expiry-seconds 600
 
-      - name: Tag image 
+      - name: Tag and push image to DO Container Registry
         env:
           ENVIRONMENT: ${{ github.event.input.environment }}
-        run: docker tag ai-stuff-registry/langbud-server registry.digitalocean.com/ai-stuff-registry/langbud-server:$ENVIRONMENT
-
-      - name: Push image to DO Container Registry 
-        run: docker push registry.digitalocean.com/ai-stuff-registry/langbud-server:latest
+        run: |
+          docker tag ai-stuff-registry/langbud-server registry.digitalocean.com/ai-stuff-registry/langbud-server:$ENVIRONMENT
+          docker push registry.digitalocean.com/ai-stuff-registry/langbud-server:$ENVIRONMENT
 
       - name: Clean up DO Container Registry
         run: doctl registry garbage-collection start --include-untagged-manifests --force
