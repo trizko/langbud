@@ -7,6 +7,8 @@ CREATE TABLE users (
     modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE INDEX idx_users_username ON users USING HASH (username);
+
 -- Function to update modified_at on row update
 CREATE OR REPLACE FUNCTION update_modified_at()
 RETURNS TRIGGER AS $$
