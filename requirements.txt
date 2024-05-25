@@ -2,6 +2,7 @@ dbmt @ git+https://github.com/trizko/dbmt
 discord.py
 fastapi
 openai
+psycopg2-binary
 python-dotenv
 redis-py-cluster
 ruff
