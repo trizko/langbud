@@ -45,11 +45,6 @@ resource "digitalocean_database_cluster" "db-cluster" {
   node_count = 1
 }
 
-resource "digitalocean_database_db" "langbud-db" {
-  cluster_id = digitalocean_database_cluster.db-cluster.id
-  name       = "langbud-db"
-}
-
 resource "digitalocean_database_firewall" "db-firewall" {
   cluster_id = digitalocean_database_cluster.db-cluster.id
 
