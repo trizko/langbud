@@ -43,7 +43,7 @@ def chatbot_explain():
     latest_message = messages[-1]
     explain_messages.append({"role": "user", "content": latest_message["content"]})
     response = openai_client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-4o",
         messages=explain_messages
     )
     content = response.choices[0].message.content
