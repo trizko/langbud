@@ -1,20 +1,29 @@
+import asyncpg
 from pydantic import BaseModel
 
 
 class User(BaseModel):
+    user_id: int
     username: str
     spoken_language: str
     learning_language: str
     messages: [dict]
 
-    def __init__(
-        self,
-        username: str,
-        spoken_language: str,
-        learning_language: str,
-        messages: [dict],
-    ):
-        self.username = username
-        self.spoken_language = spoken_language
-        self.learning_language = learning_language
-        self.messages = messages
+
+async def create_user(self):
+    pass
+
+async def get_user(self, user_id: int):
+    pass
+
+async def get_user_by_username(self, username: str):
+    pass
+
+async def update_user(self, user_id: int):
+    pass
+
+async def delete_user(self, user_id: int):
+    pass
+
+async def get_user_messages(self, user_id: int):
+    pass
