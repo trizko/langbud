@@ -14,10 +14,17 @@ from fastapi import FastAPI
 from openai import OpenAI
 from pydantic import BaseModel
 
+from models.user import create_user, get_user_by_username
+
+from db import Database
+
 load_dotenv()
 
 # Setup the logger
 logger = logging.getLogger("uvicorn")
+
+# Setup database connection pooling object
+database = Database(os.getenv("PG_URI"))
 
 # Setup the OpenAI client
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -85,19 +92,16 @@ async def on_message(message):
     if discord_client.user in message.mentions:
         await message.channel.send(create_chatbot_response(message.content))
 
-# Create variable to hold the connection to the database
-db_conn = None
-
 # Setup FastAPI app
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Start the discord client in a separate task
     task = asyncio.create_task(discord_client.start(os.getenv('DISCORD_BOT_TOKEN')))
     # Connect to the database
-    db_conn = await asyncpg.connect(os.getenv('PG_URI'))
+    await database.connect()
     yield
     # Close the database connection
-    await db_conn.close()
+    await database.disconnect()
     # Shutdown the discord client
     task.cancel()
     try:
