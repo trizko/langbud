@@ -1,8 +1,8 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
-    spoken_languages JSON,
-    learning_languages JSON,
+    spoken_language VARCHAR(255),
+    learning_language VARCHAR(255),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
