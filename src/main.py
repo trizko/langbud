@@ -84,12 +84,19 @@ async def on_message(message):
     if discord_client.user in message.mentions:
         await message.channel.send(create_chatbot_response(message.content))
 
+# Create variable to hold the connection to the database
+db_conn = None
+
 # Setup FastAPI app
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Start the discord client in a separate task
     task = asyncio.create_task(discord_client.start(os.getenv('DISCORD_BOT_TOKEN')))
+    # Connect to the database
+    db_conn = await asyncpg.connect(os.getenv('PG_URI'))
     yield
+    # Close the database connection
+    await db_conn.close()
     # Shutdown the discord client
     task.cancel()
     try:
