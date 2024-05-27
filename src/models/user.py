@@ -1,6 +1,6 @@
 import asyncpg
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 
 class User(BaseModel):
@@ -8,7 +8,7 @@ class User(BaseModel):
     username: str
     spoken_language: str
     learning_language: str
-    messages: List[dict]
+    messages: Optional[List[str]] = []
 
 
 async def create_user(db_conn: asyncpg.Connection, username: str, spoken_language: str, learning_language: str):
