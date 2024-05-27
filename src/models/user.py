@@ -13,16 +13,29 @@ class User(BaseModel):
 
 async def create_user(db_conn: asyncpg.Connection, username: str, spoken_language: str, learning_language: str):
     new_user = await db_conn.fetchrow(
-        "INSERT INTO users (username, spoken_language, learning_language) VALUES ($1, $2, $3)",
+        "INSERT INTO users (username, spoken_language, learning_language) VALUES ($1, $2, $3) RETURNING *",
         username,
         spoken_language,
         learning_language
     )
-    return new_user
+    return User(
+        user_id=new_user.get("id"),
+        username=new_user.get("username"),
+        spoken_language=new_user.get("spoken_language"),
+        learning_language=new_user.get("learning_language")
+    )
 
 async def get_user_by_username(db_conn: asyncpg.Connection, username: str):
     user = await db_conn.fetchrow("SELECT * FROM users WHERE username = $1", username)
-    return user
+    if not user:
+        return None
+
+    return User(
+        user_id=user.get("id"),
+        username=user.get("username"),
+        spoken_language=user.get("spoken_language"),
+        learning_language=user.get("learning_language")
+    )
 
 async def get_user(db_conn: asyncpg.Connection, user_id: int):
     pass
