@@ -8,7 +8,7 @@ class User(BaseModel):
     username: str
     spoken_language: str
     learning_language: str
-    messages: Optional[List[str]] = []
+    messages: Optional[List[dict]] = []
 
 
 async def create_user(db_conn: asyncpg.Connection, username: str, spoken_language: str, learning_language: str):
@@ -76,10 +76,10 @@ async def delete_user(db_conn: asyncpg.Connection, user_id: int):
 
 
 async def get_user_with_messages(db_conn: asyncpg.Connection, user: User):
-    messages = await db_conn.fetch("SELECT * FROM messages WHERE user_id = $1", user.user_id)
+    messages = await db_conn.fetch("SELECT is_from_user, message_text FROM messages WHERE user_id = $1", user.user_id)
     if not messages:
         return user
     
-    user.messages = [message.get("content") for message in messages]
+    user.messages = [{"role": "user" if message.get("is_from_user") else "assistant", "content": message.get("message_text")} for message in messages]
     return user
     
