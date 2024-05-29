@@ -75,5 +75,11 @@ async def delete_user(db_conn: asyncpg.Connection, user_id: int):
     return True
 
 
-async def get_user_messages(db_conn: asyncpg.Connection, user_id: int):
-    pass
+async def get_user_with_messages(db_conn: asyncpg.Connection, user: User):
+    messages = await db_conn.fetch("SELECT * FROM messages WHERE user_id = $1", user.user_id)
+    if not messages:
+        return user
+    
+    user.messages = [message.get("content") for message in messages]
+    return user
+    
