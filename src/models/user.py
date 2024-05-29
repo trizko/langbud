@@ -20,19 +20,25 @@ class User(BaseModel):
     messages: Optional[List[dict]] = []
 
 
-async def create_user(db_conn: asyncpg.Connection, username: str, spoken_language: str, learning_language: str):
+async def create_user(
+    db_conn: asyncpg.Connection,
+    username: str,
+    spoken_language: str,
+    learning_language: str,
+):
     new_user = await db_conn.fetchrow(
         "INSERT INTO users (username, spoken_language, learning_language) VALUES ($1, $2, $3) RETURNING *",
         username,
         spoken_language,
-        learning_language
+        learning_language,
     )
     return User(
         user_id=new_user.get("id"),
         username=new_user.get("username"),
         spoken_language=new_user.get("spoken_language"),
-        learning_language=new_user.get("learning_language")
+        learning_language=new_user.get("learning_language"),
     )
+
 
 async def get_user_by_username(db_conn: asyncpg.Connection, username: str):
     user = await db_conn.fetchrow("SELECT * FROM users WHERE username = $1", username)
@@ -43,8 +49,9 @@ async def get_user_by_username(db_conn: asyncpg.Connection, username: str):
         user_id=user.get("id"),
         username=user.get("username"),
         spoken_language=user.get("spoken_language"),
-        learning_language=user.get("learning_language")
+        learning_language=user.get("learning_language"),
     )
+
 
 async def get_user(db_conn: asyncpg.Connection, user_id: int):
     user = await db_conn.fetchrow("SELECT * FROM users WHERE id = $1", user_id)
@@ -55,15 +62,21 @@ async def get_user(db_conn: asyncpg.Connection, user_id: int):
         user_id=user.get("id"),
         username=user.get("username"),
         spoken_language=user.get("spoken_language"),
-        learning_language=user.get("learning_language")
+        learning_language=user.get("learning_language"),
     )
 
-async def update_user(db_conn: asyncpg.Connection, user_id: int, spoken_language: str, learning_language: str):
+
+async def update_user(
+    db_conn: asyncpg.Connection,
+    user_id: int,
+    spoken_language: str,
+    learning_language: str,
+):
     user = await db_conn.fetchrow(
         "UPDATE users SET spoken_language = $1, learning_language = $2 WHERE id = $3 RETURNING *",
         spoken_language,
         learning_language,
-        user_id
+        user_id,
     )
     if not user:
         return None
@@ -72,8 +85,9 @@ async def update_user(db_conn: asyncpg.Connection, user_id: int, spoken_language
         user_id=user.get("id"),
         username=user.get("username"),
         spoken_language=user.get("spoken_language"),
-        learning_language=user.get("learning_language")
+        learning_language=user.get("learning_language"),
     )
+
 
 async def delete_user(db_conn: asyncpg.Connection, user_id: int):
     try:
