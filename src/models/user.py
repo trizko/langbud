@@ -38,7 +38,9 @@ async def get_user_by_username(db_conn: asyncpg.Connection, username: str):
     )
 
 async def get_user(db_conn: asyncpg.Connection, user_id: int):
-    pass
+    user = await db_conn.fetchrow("SELECT * FROM users WHERE id = $1", user_id)
+    if not user:
+        return None
 
 async def update_user(db_conn: asyncpg.Connection, user_id: int):
     pass
