@@ -2,7 +2,6 @@ import os
 import logging
 
 import asyncio
-import asyncpg
 import uvicorn
 
 import discord
