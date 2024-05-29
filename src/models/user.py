@@ -3,6 +3,15 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 
+LANGUAGE_MAPPING = {
+    "en": "English",
+    "es": "Spanish",
+    "fr": "French",
+    "de": "German",
+    "it": "Italian",
+}
+
+
 class User(BaseModel):
     user_id: int
     username: str
@@ -76,10 +85,23 @@ async def delete_user(db_conn: asyncpg.Connection, user_id: int):
 
 
 async def get_user_with_messages(db_conn: asyncpg.Connection, user: User):
-    messages = await db_conn.fetch("SELECT is_from_user, message_text FROM messages WHERE user_id = $1", user.user_id)
+    messages = await db_conn.fetch(
+        "SELECT is_from_user, message_text FROM messages WHERE user_id = $1",
+        user.user_id,
+    )
     if not messages:
         return user
-    
-    user.messages = [{"role": "user" if message.get("is_from_user") else "assistant", "content": message.get("message_text")} for message in messages]
+
+    system_message = {
+        "role": "system",
+        "content": f"You are a friendly {LANGUAGE_MAPPING[user.learning_language]}-speaking chatbot. Your task is to help the user learn {LANGUAGE_MAPPING[user.learning_language]}. You should continue the conversation in {LANGUAGE_MAPPING[user.learning_language]}, but if the user makes a mistake, correct them in {LANGUAGE_MAPPING[user.spoken_language]}.",
+    }
+    user.messages = [
+        {
+            "role": "user" if message.get("is_from_user") else "assistant",
+            "content": message.get("message_text"),
+        }
+        for message in messages
+    ]
+    user.messages.insert(0, system_message)
     return user
-    
