@@ -67,7 +67,13 @@ async def update_user(db_conn: asyncpg.Connection, user_id: int, spoken_language
     )
 
 async def delete_user(db_conn: asyncpg.Connection, user_id: int):
-    pass
+    try:
+        await db_conn.execute("DELETE FROM users WHERE id = $1", user_id)
+    except Exception:
+        return False
+
+    return True
+
 
 async def get_user_messages(db_conn: asyncpg.Connection, user_id: int):
     pass
