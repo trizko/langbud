@@ -135,3 +135,13 @@ async def create_message(
     )
 
     return message
+
+async def get_last_message(db_conn: asyncpg.Connection, user: User):
+    message = await db_conn.fetchrow(
+        "SELECT * FROM messages WHERE user_id = $1 ORDER BY id DESC LIMIT 1",
+        user.user_id,
+    )
+    if not message:
+        return None
+
+    return message.get("message_text")
