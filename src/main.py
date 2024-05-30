@@ -13,7 +13,7 @@ from fastapi import FastAPI
 from openai import OpenAI
 from pydantic import BaseModel
 
-from models.user import create_user, get_user_by_username
+from models.user import create_user, get_user_by_username, create_message, get_messages_by_user
 
 from db import Database
 
@@ -27,12 +27,6 @@ database = Database(os.getenv("PG_URI"))
 
 # Setup the OpenAI client
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-messages = [
-    {
-        "role": "system",
-        "content": "You are a friendly Spanish-speaking chatbot. Your task is to help the user learn Spanish. You should continue the conversation in Spanish, but if the user makes a mistake, correct them in English.",
-    },
-]
 explain_messages = [
     {
         "role": "system",
@@ -41,11 +35,13 @@ explain_messages = [
 ]
 
 
-def create_chatbot_response(prompt):
-    messages.append({"role": "user", "content": prompt})
+async def create_chatbot_response(db_conn, user, prompt):
+    logger.info(f"Creating chatbot response for user {user} with prompt: {prompt}")
+    message = await create_message(db_conn, user.user_id, is_from_user=True, message_text=prompt)
+    messages = await get_messages_by_user(db_conn, user)
     response = openai_client.chat.completions.create(model="gpt-4", messages=messages)
     content = response.choices[0].message.content
-    messages.append({"role": "assistant", "content": content})
+    message = await create_message(db_conn, user.user_id, is_from_user=False, message_text=content)
 
     return content
 
@@ -89,14 +85,24 @@ async def on_ready():
 async def on_message(message):
     if message.author == discord_client.user:
         return
+    
+    # Get or create the user
+    db_pool = await database.get_pool()
+    async with db_pool.acquire() as connection:
+        user = await get_user_by_username(connection, message.author.name)
+        if not user:
+            user = await create_user(connection, message.author.name, "en", "es")
+        
+        logger.info(f"Received message from {message.author.name}: {message.content}")
+        response = await create_chatbot_response(connection, user, message.content)
 
-    # Respond to direct messages
-    if isinstance(message.channel, discord.DMChannel):
-        await message.channel.send(create_chatbot_response(message.content))
+        # Respond to direct messages
+        if isinstance(message.channel, discord.DMChannel):
+            await message.channel.send(response)
 
-    # Respond to mentions
-    if discord_client.user in message.mentions:
-        await message.channel.send(create_chatbot_response(message.content))
+        # Respond to mentions
+        if discord_client.user in message.mentions:
+            await message.channel.send(response)
 
 
 # Setup FastAPI app
