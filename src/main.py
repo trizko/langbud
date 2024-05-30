@@ -13,7 +13,12 @@ from fastapi import FastAPI
 from openai import OpenAI
 from pydantic import BaseModel
 
-from models.user import create_user, get_user_by_username, create_message, get_messages_by_user
+from models.user import (
+    create_user,
+    get_user_by_username,
+    create_message,
+    get_messages_by_user,
+)
 
 from db import Database
 
@@ -37,11 +42,15 @@ explain_messages = [
 
 async def create_chatbot_response(db_conn, user, prompt):
     logger.info(f"Creating chatbot response for user {user} with prompt: {prompt}")
-    message = await create_message(db_conn, user.user_id, is_from_user=True, message_text=prompt)
+    message = await create_message(
+        db_conn, user.user_id, is_from_user=True, message_text=prompt
+    )
     messages = await get_messages_by_user(db_conn, user)
     response = openai_client.chat.completions.create(model="gpt-4", messages=messages)
     content = response.choices[0].message.content
-    message = await create_message(db_conn, user.user_id, is_from_user=False, message_text=content)
+    message = await create_message(
+        db_conn, user.user_id, is_from_user=False, message_text=content
+    )
 
     return content
 
@@ -85,14 +94,14 @@ async def on_ready():
 async def on_message(message):
     if message.author == discord_client.user:
         return
-    
+
     # Get or create the user
     db_pool = await database.get_pool()
     async with db_pool.acquire() as connection:
         user = await get_user_by_username(connection, message.author.name)
         if not user:
             user = await create_user(connection, message.author.name, "en", "es")
-        
+
         logger.info(f"Received message from {message.author.name}: {message.content}")
         response = await create_chatbot_response(connection, user, message.content)
 
