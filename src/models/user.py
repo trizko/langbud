@@ -98,10 +98,10 @@ async def delete_user(db_conn: asyncpg.Connection, user_id: int):
     return True
 
 
-async def get_messages_by_user_id(db_conn: asyncpg.Connection, user_id: int):
+async def get_messages_by_user(db_conn: asyncpg.Connection, user: User):
     messages = await db_conn.fetch(
         "SELECT is_from_user, message_text FROM messages WHERE user_id = $1",
-        user_id,
+        user.user_id,
     )
     if not messages:
         return []
