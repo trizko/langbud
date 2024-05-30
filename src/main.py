@@ -18,6 +18,7 @@ from models.user import (
     get_user_by_username,
     create_message,
     get_messages_by_user,
+    get_last_message,
 )
 
 from db import Database
@@ -32,12 +33,6 @@ database = Database(os.getenv("PG_URI"))
 
 # Setup the OpenAI client
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-explain_messages = [
-    {
-        "role": "system",
-        "content": "You are a friendly Spanish-teaching chatbot. You take the users Spanish messages and explain them word for word in English. Also, include ways you can respond to this message in Spanish.",
-    },
-]
 
 
 async def create_chatbot_response(db_conn, user, prompt):
@@ -55,9 +50,15 @@ async def create_chatbot_response(db_conn, user, prompt):
     return content
 
 
-def chatbot_explain():
-    latest_message = messages[-1]
-    explain_messages.append({"role": "user", "content": latest_message["content"]})
+async def chatbot_explain(db_conn, user):
+    explain_messages = [
+        {
+            "role": "system",
+            "content": "You are a friendly Spanish-teaching chatbot. You take the users Spanish messages and explain them word for word in English. Also, include ways you can respond to this message in Spanish.",
+        },
+    ]
+    latest_message = await get_last_message(db_conn, user)
+    explain_messages.append({"role": "user", "content": latest_message})
     response = openai_client.chat.completions.create(
         model="gpt-4o", messages=explain_messages
     )
@@ -80,7 +81,12 @@ tree = app_commands.CommandTree(discord_client)
 )
 async def explain(interaction):
     await interaction.response.defer()
-    explanation = chatbot_explain()
+
+    db_pool = await database.get_pool()
+    async with db_pool.acquire() as connection:
+        user = await get_user_by_username(connection, interaction.user.name)
+        explanation = await chatbot_explain(connection, user)
+
     await interaction.followup.send(explanation)
 
 
