@@ -119,3 +119,19 @@ async def get_messages_by_user_id(db_conn: asyncpg.Connection, user_id: int):
     ]
     formatted_messages.insert(0, system_message)
     return formatted_messages
+
+
+async def create_message(
+    db_conn: asyncpg.Connection,
+    user_id: int,
+    is_from_user: bool,
+    message_text: str,
+):
+    message = await db_conn.execute(
+        "INSERT INTO messages (user_id, is_from_user, message_text) VALUES ($1, $2, $3) RETURNING *",
+        user_id,
+        is_from_user,
+        message_text,
+    )
+
+    return message
