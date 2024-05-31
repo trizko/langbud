@@ -44,9 +44,8 @@ jobs:
         run: |
           terraform init
           terraform workspace select ${{ github.event.inputs.environment }}
-          terraform plan
-          # terraform plan -out=tfplan
-          # terraform apply tfplan
+          terraform plan -out=tfplan
+          terraform apply tfplan
 
       - name: Clean up Terraform
-        run: echo rm tfplan # run: rm tfplan
+        run: rm tfplan
