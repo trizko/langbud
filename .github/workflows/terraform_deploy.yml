@@ -1,0 +1,51 @@
+name: Terraform Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: choice
+        options:
+          - 'prod'
+          - 'dev'
+        default: 'dev'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo 
+        uses: actions/checkout@v4
+      
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.1.7"
+
+      - name: Setup AWS credentials file for Terraform on DigitalOcean
+        env:
+          DO_ACCESS_KEY_ID: ${{ secrets.DO_ACCESS_KEY_ID }}
+          DO_SECRET_ACCESS_KEY: ${{ secrets.DO_SECRET_ACCESS_KEY }}
+        run: |
+          mkdir -p ~/.aws
+          echo "[digitalocean]" > ~/.aws/credentials
+          echo "aws_access_key_id=$DO_ACCESS_KEY_ID" >> ~/.aws/credentials
+          echo "aws_secret_access_key=$DO_SECRET_ACCESS_KEY" >> ~/.aws/credentials
+
+      - name: Initialize/Plan/Apply Terraform
+        env:
+          AWS_PROFILE: digitalocean
+          TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          TF_VAR_ssh_fingerprint: ${{ secrets.SERVER_SSH_FINGERPRINT }}
+          TF_VAR_ci_cd_ssh_public_key: ${{ secrets.CI_CD_SSH_PUBLIC_KEY }}
+        run: |
+          terraform init
+          terraform workspace select ${{ github.event.inputs.environment }}
+          terraform plan
+          # terraform plan -out=tfplan
+          # terraform apply tfplan
+
+      - name: Clean up Terraform
+        run: echo rm tfplan # run: rm tfplan
