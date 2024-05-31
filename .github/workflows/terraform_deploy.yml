@@ -35,6 +35,7 @@ jobs:
           echo "aws_secret_access_key=$DO_SECRET_ACCESS_KEY" >> ~/.aws/credentials
 
       - name: Initialize/Plan/Apply Terraform
+        working-directory: ./infra/terraform/app
         env:
           AWS_PROFILE: digitalocean
           TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
