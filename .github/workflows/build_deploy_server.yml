@@ -65,7 +65,7 @@ jobs:
 
       - name: Configure SSH
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.CI_CD_SSH_PRIVATE_KEY }}
           ENVIRONMENT: ${{ github.event.input.environment }}
         run: |
           mkdir -p ~/.ssh/
