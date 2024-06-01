@@ -1,4 +1,4 @@
-name: "Build and push container image"
+name: "Build and Deploy Server"
 
 on:
   workflow_dispatch:
@@ -62,6 +62,32 @@ jobs:
         run: |
           docker tag ai-stuff-registry/langbud-server registry.digitalocean.com/ai-stuff-registry/langbud-server:$ENVIRONMENT
           docker push registry.digitalocean.com/ai-stuff-registry/langbud-server:$ENVIRONMENT
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ENVIRONMENT: ${{ github.event.input.environment }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_langbud-server.key
+          chmod 600 ~/.ssh/id_langbud-server.key
+
+          export SSH_USER="langbud-server"
+          export SSH_HOST="$(doctl compute droplet get langbud-server-$ENVIRONMENT --template {{.PublicIPv4}})"
+
+          cat <<EOF > ~/.ssh/config
+          Host langbud-server
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/id_langbud-server.key
+            StrictHostKeyChecking no
+          EOF
+
+      - name: Stop langbud-server service
+        run: ssh langbud-server 'sudo systemctl stop langbud-server'
+
+      - name: Start langbud-server service
+        run: ssh langbud-server 'sudo systemctl start langbud-server'
 
       - name: Clean up DO Container Registry
         run: doctl registry garbage-collection start --include-untagged-manifests --force
