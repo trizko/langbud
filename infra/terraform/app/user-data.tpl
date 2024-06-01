@@ -69,8 +69,8 @@ cat <<EOF > /etc/systemd/system/langbud-server.service
 Description=langbud-server
 
 [Service]
-ExecStartPre=docker pull registry.digitalocean.com/ai-stuff-registry/langbud-server:latest
-ExecStart=docker run --init --rm -p 0.0.0.0:8000:8000 --name=langbud-server registry.digitalocean.com/ai-stuff-registry/langbud-server:latest
+ExecStartPre=docker pull registry.digitalocean.com/ai-stuff-registry/langbud-server:${ENVIRONMENT}
+ExecStart=docker run --init --rm -p 0.0.0.0:8000:8000 --name=langbud-server registry.digitalocean.com/ai-stuff-registry/langbud-server:${ENVIRONMENT}
 ExecStop=docker stop langbud-server
 User=root
 
