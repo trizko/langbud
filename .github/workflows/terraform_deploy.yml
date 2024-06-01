@@ -13,7 +13,7 @@ on:
         default: 'dev'
 
 jobs:
-  deploy:
+  deploy_infra:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repo 
