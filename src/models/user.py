@@ -9,6 +9,7 @@ LANGUAGE_MAPPING = {
     "fr": "French",
     "de": "German",
     "it": "Italian",
+    "tr": "Turkish",
 }
 
 
