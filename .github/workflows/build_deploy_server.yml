@@ -29,7 +29,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           DISCORD_BOT_TOKEN_DEV: ${{ secrets.DISCORD_BOT_TOKEN_DEV }}
           DISCORD_BOT_TOKEN_PROD: ${{ secrets.DISCORD_BOT_TOKEN_PROD }}
-          ENVIRONMENT: ${{ github.event.input.environment }}
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
         run: |
           # get connection details for postgres db
           DB_ID=$(doctl databases list | grep langbud-db-cluster-$ENVIRONMENT | awk '{print $1}')
@@ -58,7 +58,7 @@ jobs:
 
       - name: Tag and push image to DO Container Registry
         env:
-          ENVIRONMENT: ${{ github.event.input.environment }}
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
         run: |
           docker tag ai-stuff-registry/langbud-server registry.digitalocean.com/ai-stuff-registry/langbud-server:$ENVIRONMENT
           docker push registry.digitalocean.com/ai-stuff-registry/langbud-server:$ENVIRONMENT
@@ -66,7 +66,7 @@ jobs:
       - name: Configure SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.CI_CD_SSH_PRIVATE_KEY }}
-          ENVIRONMENT: ${{ github.event.input.environment }}
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_langbud-server.key
