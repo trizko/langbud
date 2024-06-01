@@ -48,4 +48,5 @@ jobs:
           terraform apply tfplan
 
       - name: Clean up Terraform
+        working-directory: ./infra/terraform/app
         run: rm tfplan
