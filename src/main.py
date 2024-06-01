@@ -19,6 +19,8 @@ from models.user import (
     create_message,
     get_messages_by_user,
     get_last_message,
+    update_user_language,
+    LANGUAGE_MAPPING,
 )
 
 from db import Database
@@ -86,6 +88,32 @@ async def explain(interaction):
         explanation = await chatbot_explain(connection, user)
 
     await interaction.followup.send(explanation)
+
+@tree.command(name="select-language", description="Selects the language you want to learn from list of supported options")
+@app_commands.describe(languages="Select the language you want to learn")
+@app_commands.choices(languages=[
+    app_commands.Choice(name="Spanish", value="es"),
+    app_commands.Choice(name="French", value="fr"),
+    app_commands.Choice(name="German", value="de"),
+    app_commands.Choice(name="Italian", value="it"),
+    app_commands.Choice(name="Turkish", value="tr"),
+])
+async def select_language(interaction, languages: app_commands.Choice[str]):
+    await interaction.response.defer()
+
+    try:
+        db_pool = await database.get_pool()
+        async with db_pool.acquire() as connection:
+            user = await get_user_by_username(connection, interaction.user.name)
+            if not user:
+                user = await create_user(connection, interaction.user.name, "en", languages.value)
+            else:
+                user = await update_user_language(connection, user, languages.value)
+    except Exception as e:
+        await interaction.followup.send(f"An error occurred when selecting the language")
+        return
+
+    await interaction.followup.send(f"User language successfully set to {LANGUAGE_MAPPING[user.learning_language]}")
 
 
 @discord_client.event

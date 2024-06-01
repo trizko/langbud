@@ -146,3 +146,19 @@ async def get_last_message(db_conn: asyncpg.Connection, user: User):
         return None
 
     return message.get("message_text")
+
+async def update_user_language(db_conn: asyncpg.Connection, user: User, learning_language: str):
+    user = await db_conn.fetchrow(
+        "UPDATE users SET learning_language = $1 WHERE id = $2 RETURNING *",
+        learning_language,
+        user.user_id,
+    )
+    if not user:
+        return None
+
+    return User(
+        user_id=user.get("id"),
+        username=user.get("username"),
+        spoken_language=user.get("spoken_language"),
+        learning_language=user.get("learning_language"),
+    )
