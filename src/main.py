@@ -54,7 +54,7 @@ async def chatbot_explain(db_conn, user):
     explain_messages = [
         {
             "role": "system",
-            "content": "You are a friendly Spanish-teaching chatbot. You take the users Spanish messages and explain them word for word in English. Also, include ways you can respond to this message in Spanish.",
+            "content": f"You are a friendly {LANGUAGE_MAPPING[user.learning_language]}-teaching chatbot. You take the users {LANGUAGE_MAPPING[user.learning_language]} messages and explain them word for word in {LANGUAGE_MAPPING[user.spoken_language]}. Also, include ways you can respond to this message in {LANGUAGE_MAPPING[user.learning_language]}.",
         },
     ]
     latest_message = await get_last_message(db_conn, user)
