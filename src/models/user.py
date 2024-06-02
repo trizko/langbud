@@ -102,8 +102,9 @@ async def delete_user(db_conn: asyncpg.Connection, user_id: int):
 
 async def get_messages_by_user(db_conn: asyncpg.Connection, user: User):
     messages = await db_conn.fetch(
-        "SELECT is_from_user, message_text FROM messages WHERE user_id = $1",
+        "SELECT is_from_user, message_text FROM messages WHERE user_id = $1 AND message_language = $2 ORDER BY id ASC LIMIT 50",
         user.user_id,
+        user.learning_language,
     )
     if not messages:
         return []
@@ -125,15 +126,16 @@ async def get_messages_by_user(db_conn: asyncpg.Connection, user: User):
 
 async def create_message(
     db_conn: asyncpg.Connection,
-    user_id: int,
+    user: User,
     is_from_user: bool,
     message_text: str,
 ):
     message = await db_conn.execute(
-        "INSERT INTO messages (user_id, is_from_user, message_text) VALUES ($1, $2, $3) RETURNING *",
-        user_id,
+        "INSERT INTO messages (user_id, is_from_user, message_text, message_language) VALUES ($1, $2, $3, $4) RETURNING *",
+        user.user_id,
         is_from_user,
         message_text,
+        user.learning_language,
     )
 
     return message
@@ -141,8 +143,9 @@ async def create_message(
 
 async def get_last_message(db_conn: asyncpg.Connection, user: User):
     message = await db_conn.fetchrow(
-        "SELECT * FROM messages WHERE user_id = $1 AND is_from_user = false ORDER BY id DESC LIMIT 1",
+        "SELECT * FROM messages WHERE user_id = $1 AND is_from_user = false AND message_language = $2 ORDER BY id DESC LIMIT 1",
         user.user_id,
+        user.learning_language,
     )
     if not message:
         return None
