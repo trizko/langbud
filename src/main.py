@@ -41,7 +41,7 @@ async def create_chatbot_response(db_conn, user, prompt):
     logger.info(f"Creating chatbot response for user {user} with prompt: {prompt}")
     await create_message(db_conn, user.user_id, is_from_user=True, message_text=prompt)
     messages = await get_messages_by_user(db_conn, user)
-    response = openai_client.chat.completions.create(model="gpt-4", messages=messages)
+    response = openai_client.chat.completions.create(model="gpt-4o", messages=messages)
     content = response.choices[0].message.content
     await create_message(
         db_conn, user.user_id, is_from_user=False, message_text=content
