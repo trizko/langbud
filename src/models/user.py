@@ -10,6 +10,7 @@ LANGUAGE_MAPPING = {
     "de": "German",
     "it": "Italian",
     "tr": "Turkish",
+    "pt-BR": "Brazilian Portuguese",
 }
 
 

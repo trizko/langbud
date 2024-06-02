@@ -96,6 +96,7 @@ async def explain(interaction):
     app_commands.Choice(name="French", value="fr"),
     app_commands.Choice(name="German", value="de"),
     app_commands.Choice(name="Italian", value="it"),
+    app_commands.Choice(name="Brazilian Portuguese", value="pt-BR"),
     app_commands.Choice(name="Turkish", value="tr"),
 ])
 async def select_language(interaction, languages: app_commands.Choice[str]):
