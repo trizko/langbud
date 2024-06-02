@@ -131,7 +131,12 @@ async def on_ready():
 
 @discord_client.event
 async def on_message(message):
+    # Ignore messages from the bot itself
     if message.author == discord_client.user:
+        return
+
+    # Ignore empty messages
+    if not message.content:
         return
 
     # Get or create the user
