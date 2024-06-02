@@ -147,14 +147,15 @@ async def on_message(message):
             user = await create_user(connection, message.author.name, "en", "es")
 
         logger.info(f"Received message from {message.author.name}: {message.content}")
-        response = await create_chatbot_response(connection, user, message.content)
 
         # Respond to direct messages
         if isinstance(message.channel, discord.DMChannel):
+            response = await create_chatbot_response(connection, user, message.content)
             await message.channel.send(response)
 
         # Respond to mentions
         if discord_client.user in message.mentions:
+            response = await create_chatbot_response(connection, user, message.content)
             await message.channel.send(response)
 
 
