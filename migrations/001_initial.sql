@@ -28,6 +28,7 @@ CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     message_text TEXT NOT NULL,
+    message_language VARCHAR(255) NOT NULL,
     is_from_user BOOLEAN NOT NULL,
     sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id)
