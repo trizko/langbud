@@ -117,6 +117,7 @@ async def select_language(interaction, languages: app_commands.Choice[str]):
                 user = await update_user_language(connection, user, languages.value)
     except Exception as e:
         await interaction.followup.send(f"An error occurred when selecting the language")
+        logger.error(f"An error occurred when selecting the language: {e}")
         return
 
     await interaction.followup.send(f"User language successfully set to {LANGUAGE_MAPPING[user.learning_language]}")
