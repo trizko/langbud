@@ -80,19 +80,18 @@ tree = app_commands.CommandTree(discord_client)
     name="explain", description="explains the chatbots last response in detail"
 )
 async def explain(interaction):
-    await interaction.response.defer(ephemeral=True, thinking=True)
-
     try:
+        await interaction.response.defer(ephemeral=True, thinking=True)
         db_pool = await database.get_pool()
         async with db_pool.acquire() as connection:
             user = await get_user_by_username(connection, interaction.user.name)
             explanation = await chatbot_explain(connection, user)
+        await interaction.followup.send(explanation)
     except Exception as e:
         await interaction.followup.send(f"An error occurred when explaining the chatbot response")
         logger.error(f"An error occurred when explaining the chatbot response: {e}")
         return
 
-    await interaction.followup.send(explanation)
 
 @tree.command(name="select-language", description="Selects the language you want to learn from list of supported options")
 @app_commands.describe(languages="Select the language you want to learn")
@@ -105,9 +104,8 @@ async def explain(interaction):
     app_commands.Choice(name="Turkish", value="tr"),
 ])
 async def select_language(interaction, languages: app_commands.Choice[str]):
-    await interaction.response.defer()
-
     try:
+        await interaction.response.defer()
         db_pool = await database.get_pool()
         async with db_pool.acquire() as connection:
             user = await get_user_by_username(connection, interaction.user.name)
@@ -115,12 +113,12 @@ async def select_language(interaction, languages: app_commands.Choice[str]):
                 user = await create_user(connection, interaction.user.name, "en", languages.value)
             else:
                 user = await update_user_language(connection, user, languages.value)
+        await interaction.followup.send(f"User language successfully set to {LANGUAGE_MAPPING[user.learning_language]}")
     except Exception as e:
         await interaction.followup.send(f"An error occurred when selecting the language")
         logger.error(f"An error occurred when selecting the language: {e}")
         return
 
-    await interaction.followup.send(f"User language successfully set to {LANGUAGE_MAPPING[user.learning_language]}")
 
 
 @discord_client.event
@@ -145,8 +143,6 @@ async def on_message(message):
         user = await get_user_by_username(connection, message.author.name)
         if not user:
             user = await create_user(connection, message.author.name, "en", "es")
-
-        logger.info(f"Received message from {message.author.name}: {message.content}")
 
         # Respond to direct messages
         if isinstance(message.channel, discord.DMChannel):
