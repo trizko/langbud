@@ -80,12 +80,17 @@ tree = app_commands.CommandTree(discord_client)
     name="explain", description="explains the chatbots last response in detail"
 )
 async def explain(interaction):
-    await interaction.response.defer()
+    await interaction.response.defer(ephemeral=True, thinking=True)
 
-    db_pool = await database.get_pool()
-    async with db_pool.acquire() as connection:
-        user = await get_user_by_username(connection, interaction.user.name)
-        explanation = await chatbot_explain(connection, user)
+    try:
+        db_pool = await database.get_pool()
+        async with db_pool.acquire() as connection:
+            user = await get_user_by_username(connection, interaction.user.name)
+            explanation = await chatbot_explain(connection, user)
+    except Exception as e:
+        await interaction.followup.send(f"An error occurred when explaining the chatbot response")
+        logger.error(f"An error occurred when explaining the chatbot response: {e}")
+        return
 
     await interaction.followup.send(explanation)
 
