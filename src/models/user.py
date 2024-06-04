@@ -21,6 +21,13 @@ class User(BaseModel):
     learning_language: str
     messages: Optional[List[dict]] = []
 
+class Message(BaseModel):
+    message_id: int
+    user_id: int
+    is_from_user: bool
+    message_text: str
+    message_language: str
+
 
 async def create_user(
     db_conn: asyncpg.Connection,
