@@ -182,14 +182,14 @@ async def update_user_language(db_conn: asyncpg.Connection, user: User, learning
     )
 
 async def create_explanation(db_conn: asyncpg.Connection, message: Message, explanation_text: str):
-    explanation = await db_conn.execute(
+    explanation = await db_conn.fetchrow(
         "INSERT INTO explanations (user_id, message_id, explanation_text) VALUES ($1, $2, $3) RETURNING *",
         message.user_id,
         message.message_id,
         explanation_text,
     )
 
-    return explanation.get("explaination_text")
+    return explanation.get("explanation_text")
 
 async def get_explanation_by_message(db_conn: asyncpg.Connection, message: Message):
     explanation = await db_conn.fetchrow(

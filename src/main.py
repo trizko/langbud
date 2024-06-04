@@ -64,7 +64,7 @@ async def chatbot_explain(db_conn, user):
             "content": f"You are a friendly {LANGUAGE_MAPPING[user.learning_language]}-teaching chatbot. You take the users {LANGUAGE_MAPPING[user.learning_language]} messages and explain them word for word in {LANGUAGE_MAPPING[user.spoken_language]}. Also, include ways you can respond to this message in {LANGUAGE_MAPPING[user.learning_language]}.",
         },
     ]
-    explain_messages.append({"role": "user", "content": latest_message.get("message_text")})
+    explain_messages.append({"role": "user", "content": latest_message.message_text})
     response = openai_client.chat.completions.create(
         model="gpt-4o", messages=explain_messages
     )
