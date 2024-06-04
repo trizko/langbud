@@ -87,7 +87,7 @@ tree = app_commands.CommandTree(discord_client)
 )
 async def explain(interaction):
     try:
-        await interaction.response.defer(ephemeral=True, thinking=True)
+        await interaction.response.defer(ephemeral=False, thinking=True)
         db_pool = await database.get_pool()
         async with db_pool.acquire() as connection:
             user = await get_user_by_username(connection, interaction.user.name)
