@@ -137,7 +137,7 @@ async def create_message(
     is_from_user: bool,
     message_text: str,
 ):
-    message = await db_conn.execute(
+    message = await db_conn.fetchrow(
         "INSERT INTO messages (user_id, is_from_user, message_text, message_language) VALUES ($1, $2, $3, $4) RETURNING *",
         user.user_id,
         is_from_user,
