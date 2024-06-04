@@ -17,6 +17,8 @@ from models.user import (
     create_user,
     get_user_by_username,
     create_message,
+    create_explanation,
+    get_explanation_by_message,
     get_messages_by_user,
     get_last_message,
     update_user_language,
@@ -51,21 +53,25 @@ async def create_chatbot_response(db_conn, user, prompt):
 
 
 async def chatbot_explain(db_conn, user):
+    latest_message = await get_last_message(db_conn, user)
+    explanation = await get_explanation_by_message(db_conn, latest_message)
+    if explanation:
+        return explanation
+
     explain_messages = [
         {
             "role": "system",
             "content": f"You are a friendly {LANGUAGE_MAPPING[user.learning_language]}-teaching chatbot. You take the users {LANGUAGE_MAPPING[user.learning_language]} messages and explain them word for word in {LANGUAGE_MAPPING[user.spoken_language]}. Also, include ways you can respond to this message in {LANGUAGE_MAPPING[user.learning_language]}.",
         },
     ]
-    latest_message = await get_last_message(db_conn, user)
-    explain_messages.append({"role": "user", "content": latest_message})
+    explain_messages.append({"role": "user", "content": latest_message.get("message_text")})
     response = openai_client.chat.completions.create(
         model="gpt-4o", messages=explain_messages
     )
     content = response.choices[0].message.content
-    explain_messages.pop()
+    explanation = await create_explanation(db_conn, latest_message, content)
 
-    return content
+    return explanation
 
 
 # Setup the Discord client
