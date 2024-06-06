@@ -24,14 +24,25 @@ BEFORE UPDATE ON users
 FOR EACH ROW
 EXECUTE FUNCTION update_modified_at();
 
+CREATE TABLE conversations (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    conversation_language VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
+CREATE INDEX idx_conversations_user_id ON conversations USING HASH (user_id);
+
 CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
+    conversation_id INTEGER NOT NULL,
     message_text TEXT NOT NULL,
-    message_language VARCHAR(255) NOT NULL,
     is_from_user BOOLEAN NOT NULL,
-    sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (conversation_id) REFERENCES conversations (id)
 );
 
 CREATE TABLE explanations (
