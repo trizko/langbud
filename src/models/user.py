@@ -16,7 +16,7 @@ LANGUAGE_MAPPING = {
 
 class User(BaseModel):
     user_id: int
-    username: str
+    discord_username: str
     spoken_language: str
     learning_language: str
     messages: Optional[List[dict]] = []
@@ -26,37 +26,36 @@ class Message(BaseModel):
     user_id: int
     is_from_user: bool
     message_text: str
-    message_language: str
 
 
 async def create_user(
     db_conn: asyncpg.Connection,
-    username: str,
+    discord_username: str,
     spoken_language: str,
     learning_language: str,
 ):
     new_user = await db_conn.fetchrow(
-        "INSERT INTO users (username, spoken_language, learning_language) VALUES ($1, $2, $3) RETURNING *",
-        username,
+        "INSERT INTO users (discord_username, spoken_language, learning_language) VALUES ($1, $2, $3) RETURNING *",
+        discord_username,
         spoken_language,
         learning_language,
     )
     return User(
         user_id=new_user.get("id"),
-        username=new_user.get("username"),
+        discord_username=new_user.get("discord_username"),
         spoken_language=new_user.get("spoken_language"),
         learning_language=new_user.get("learning_language"),
     )
 
 
-async def get_user_by_username(db_conn: asyncpg.Connection, username: str):
-    user = await db_conn.fetchrow("SELECT * FROM users WHERE username = $1", username)
+async def get_user_by_discord_username(db_conn: asyncpg.Connection, discord_username: str):
+    user = await db_conn.fetchrow("SELECT * FROM users WHERE discord_username = $1", discord_username)
     if not user:
         return None
 
     return User(
         user_id=user.get("id"),
-        username=user.get("username"),
+        discord_username=user.get("discord_username"),
         spoken_language=user.get("spoken_language"),
         learning_language=user.get("learning_language"),
     )
@@ -69,7 +68,7 @@ async def get_user(db_conn: asyncpg.Connection, user_id: int):
 
     return User(
         user_id=user.get("id"),
-        username=user.get("username"),
+        discord_username=user.get("discord_username"),
         spoken_language=user.get("spoken_language"),
         learning_language=user.get("learning_language"),
     )
@@ -92,7 +91,7 @@ async def update_user(
 
     return User(
         user_id=user.get("id"),
-        username=user.get("username"),
+        discord_username=user.get("discord_username"),
         spoken_language=user.get("spoken_language"),
         learning_language=user.get("learning_language"),
     )
@@ -176,7 +175,7 @@ async def update_user_language(db_conn: asyncpg.Connection, user: User, learning
 
     return User(
         user_id=user.get("id"),
-        username=user.get("username"),
+        discord_username=user.get("discord_username"),
         spoken_language=user.get("spoken_language"),
         learning_language=user.get("learning_language"),
     )

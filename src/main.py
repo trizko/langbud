@@ -15,7 +15,7 @@ from pydantic import BaseModel
 
 from models.user import (
     create_user,
-    get_user_by_username,
+    get_user_by_discord_username,
     create_message,
     create_explanation,
     get_explanation_by_message,
@@ -90,7 +90,7 @@ async def explain(interaction):
         await interaction.response.defer(ephemeral=False, thinking=True)
         db_pool = await database.get_pool()
         async with db_pool.acquire() as connection:
-            user = await get_user_by_username(connection, interaction.user.name)
+            user = await get_user_by_discord_username(connection, interaction.user.name)
             explanation = await chatbot_explain(connection, user)
         await interaction.followup.send(explanation)
     except Exception as e:
@@ -114,7 +114,7 @@ async def select_language(interaction, languages: app_commands.Choice[str]):
         await interaction.response.defer()
         db_pool = await database.get_pool()
         async with db_pool.acquire() as connection:
-            user = await get_user_by_username(connection, interaction.user.name)
+            user = await get_user_by_discord_username(connection, interaction.user.name)
             if not user:
                 user = await create_user(connection, interaction.user.name, "en", languages.value)
             else:
@@ -146,7 +146,7 @@ async def on_message(message):
     # Get or create the user
     db_pool = await database.get_pool()
     async with db_pool.acquire() as connection:
-        user = await get_user_by_username(connection, message.author.name)
+        user = await get_user_by_discord_username(connection, message.author.name)
         if not user:
             user = await create_user(connection, message.author.name, "en", "es")
 
