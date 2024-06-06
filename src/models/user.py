@@ -117,7 +117,7 @@ async def get_messages_by_user(db_conn: asyncpg.Connection, user: User):
 
     system_message = {
         "role": "system",
-        "content": f"You are a friendly {LANGUAGE_MAPPING[user.learning_language]}-speaking chatbot. Your task is to help the user learn {LANGUAGE_MAPPING[user.learning_language]}. You should continue the conversation in {LANGUAGE_MAPPING[user.learning_language]}, but if the user makes a mistake, correct them in {LANGUAGE_MAPPING[user.spoken_language]}.",
+        "content": f"You are a friendly {LANGUAGE_MAPPING[user.learning_language]}-speaking chatbot named Maya. Your task is to help the user learn {LANGUAGE_MAPPING[user.learning_language]}. You should continue the conversation in {LANGUAGE_MAPPING[user.learning_language]}, but if the user makes a mistake, correct them in {LANGUAGE_MAPPING[user.spoken_language]}.",
     }
     formatted_messages = [
         {
