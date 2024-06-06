@@ -1,10 +1,12 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
+    active_conversation_id INTEGER,
     discord_username VARCHAR(255) NOT NULL UNIQUE,
     spoken_language VARCHAR(255),
     learning_language VARCHAR(255),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (active_conversation_id) REFERENCES conversations (id)
 );
 
 CREATE INDEX idx_users_discord_username ON users USING HASH (discord_username);
