@@ -48,7 +48,7 @@ async def create_user(
     discord_username: str,
     spoken_language: str,
     learning_language: str,
-):
+) -> User:
     new_user = await db_conn.fetchrow(
         "INSERT INTO users (discord_username, spoken_language, learning_language) VALUES ($1, $2, $3) RETURNING *",
         discord_username,
@@ -63,7 +63,7 @@ async def create_user(
     )
 
 
-async def get_user_by_discord_username(db_conn: asyncpg.Connection, discord_username: str):
+async def get_user_by_discord_username(db_conn: asyncpg.Connection, discord_username: str) -> User:
     user = await db_conn.fetchrow("SELECT * FROM users WHERE discord_username = $1", discord_username)
     if not user:
         return None
@@ -76,7 +76,7 @@ async def get_user_by_discord_username(db_conn: asyncpg.Connection, discord_user
     )
 
 
-async def get_user(db_conn: asyncpg.Connection, user_id: int):
+async def get_user(db_conn: asyncpg.Connection, user_id: int) -> User:
     user = await db_conn.fetchrow("SELECT * FROM users WHERE id = $1", user_id)
     if not user:
         return None
@@ -94,7 +94,7 @@ async def update_user(
     user_id: int,
     spoken_language: str,
     learning_language: str,
-):
+) -> User:
     user = await db_conn.fetchrow(
         "UPDATE users SET spoken_language = $1, learning_language = $2 WHERE id = $3 RETURNING *",
         spoken_language,
@@ -121,7 +121,7 @@ async def delete_user(db_conn: asyncpg.Connection, user_id: int):
     return True
 
 
-async def get_messages_by_user(db_conn: asyncpg.Connection, user: User):
+async def get_messages_by_user(db_conn: asyncpg.Connection, user: User) -> List[dict]:
     messages = await db_conn.fetch(
         "SELECT is_from_user, message_text FROM messages WHERE user_id = $1 AND message_language = $2 ORDER BY id ASC LIMIT 50",
         user.user_id,
@@ -150,7 +150,7 @@ async def create_message(
     user: User,
     is_from_user: bool,
     message_text: str,
-):
+) -> Message:
     message = await db_conn.fetchrow(
         "INSERT INTO messages (user_id, is_from_user, message_text, message_language) VALUES ($1, $2, $3, $4) RETURNING *",
         user.user_id,
@@ -159,10 +159,16 @@ async def create_message(
         user.learning_language,
     )
 
-    return message
+    return Message(
+        message_id=message.get("id"),
+        user_id=message.get("user_id"),
+        is_from_user=message.get("is_from_user"),
+        message_text=message.get("message_text"),
+        message_language=message.get("message_language"),
+    )
 
 
-async def get_last_message(db_conn: asyncpg.Connection, user: User):
+async def get_last_message(db_conn: asyncpg.Connection, user: User) -> Message:
     message = await db_conn.fetchrow(
         "SELECT * FROM messages WHERE user_id = $1 AND is_from_user = false AND message_language = $2 ORDER BY id DESC LIMIT 1",
         user.user_id,
@@ -179,7 +185,7 @@ async def get_last_message(db_conn: asyncpg.Connection, user: User):
         message_language=message.get("message_language"),
     )
 
-async def update_user_language(db_conn: asyncpg.Connection, user: User, learning_language: str):
+async def update_user_language(db_conn: asyncpg.Connection, user: User, learning_language: str) -> User:
     user = await db_conn.fetchrow(
         "UPDATE users SET learning_language = $1 WHERE id = $2 RETURNING *",
         learning_language,
@@ -195,7 +201,7 @@ async def update_user_language(db_conn: asyncpg.Connection, user: User, learning
         learning_language=user.get("learning_language"),
     )
 
-async def create_explanation(db_conn: asyncpg.Connection, message: Message, explanation_text: str):
+async def create_explanation(db_conn: asyncpg.Connection, message: Message, explanation_text: str) -> Explanation:
     explanation = await db_conn.fetchrow(
         "INSERT INTO explanations (user_id, message_id, explanation_text) VALUES ($1, $2, $3) RETURNING *",
         message.user_id,
@@ -203,9 +209,14 @@ async def create_explanation(db_conn: asyncpg.Connection, message: Message, expl
         explanation_text,
     )
 
-    return explanation.get("explanation_text")
+    return Explanation(
+        explanation_id=explanation.get("id"),
+        user_id=explanation.get("user_id"),
+        message_id=explanation.get("message_id"),
+        explanation_text=explanation.get("explanation_text"),
+    )
 
-async def get_explanation_by_message(db_conn: asyncpg.Connection, message: Message):
+async def get_explanation_by_message(db_conn: asyncpg.Connection, message: Message) -> Explanation:
     explanation = await db_conn.fetchrow(
         "SELECT * FROM explanations WHERE message_id = $1",
         message.message_id,
@@ -213,4 +224,9 @@ async def get_explanation_by_message(db_conn: asyncpg.Connection, message: Messa
     if not explanation:
         return None
 
-    return explanation.get("explanation_text")
+    return Explanation(
+        explanation_id=explanation.get("id"),
+        user_id=explanation.get("user_id"),
+        message_id=explanation.get("message_id"),
+        explanation_text=explanation.get("explanation_text"),
+    )
