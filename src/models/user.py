@@ -19,11 +19,19 @@ class User(BaseModel):
     discord_username: str
     spoken_language: str
     learning_language: str
+    active_conversation_id: Optional[int]
+
+
+class Conversation(BaseModel):
+    conversation_id: int
+    user_id: int
+    conversation_language: str
 
 
 class Message(BaseModel):
     message_id: int
     user_id: int
+    conversation_id: int
     is_from_user: bool
     message_text: str
 
