@@ -19,7 +19,7 @@ class User(BaseModel):
     discord_username: str
     spoken_language: str
     learning_language: str
-    messages: Optional[List[dict]] = []
+
 
 class Message(BaseModel):
     message_id: int
