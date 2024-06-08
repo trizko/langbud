@@ -73,6 +73,7 @@ async def get_user_by_discord_username(db_conn: asyncpg.Connection, discord_user
         discord_username=user.get("discord_username"),
         spoken_language=user.get("spoken_language"),
         learning_language=user.get("learning_language"),
+        active_conversation_id=user.get("active_conversation_id"),
     )
 
 
@@ -86,6 +87,7 @@ async def get_user(db_conn: asyncpg.Connection, user_id: int) -> User:
         discord_username=user.get("discord_username"),
         spoken_language=user.get("spoken_language"),
         learning_language=user.get("learning_language"),
+        active_conversation_id=user.get("active_conversation_id"),
     )
 
 
@@ -109,6 +111,7 @@ async def update_user(
         discord_username=user.get("discord_username"),
         spoken_language=user.get("spoken_language"),
         learning_language=user.get("learning_language"),
+        active_conversation_id=user.get("active_conversation_id"),
     )
 
 
@@ -199,6 +202,7 @@ async def update_user_language(db_conn: asyncpg.Connection, user: User, learning
         discord_username=user.get("discord_username"),
         spoken_language=user.get("spoken_language"),
         learning_language=user.get("learning_language"),
+        active_conversation_id=user.get("active_conversation_id"),
     )
 
 async def create_explanation(db_conn: asyncpg.Connection, message: Message, explanation_text: str) -> Explanation:
