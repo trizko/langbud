@@ -1,6 +1,6 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    active_conversation_id INTEGER,
+    active_conversation_id INTEGER DEFAULT NULL,
     discord_username VARCHAR(255) NOT NULL UNIQUE,
     spoken_language VARCHAR(255),
     learning_language VARCHAR(255),
