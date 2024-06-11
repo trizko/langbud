@@ -36,7 +36,12 @@ async def create_conversation(db_conn: asyncpg.Connection, user: User, conversat
     return Conversation.from_query(conversation)
 
 async def get_conversation(db_conn: asyncpg.Connection, conversation_id: int) -> Conversation:
-    pass
+    conversation = await db_conn.fetchrow(
+        "SELECT * FROM conversations WHERE id = $1",
+        conversation_id,
+    )
+
+    return Conversation.from_query(conversation)
 
 async def get_conversations_by_user_id(db_conn: asyncpg.Connection, user_id: int) -> List[Conversation]:
     pass
