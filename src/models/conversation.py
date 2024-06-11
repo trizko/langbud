@@ -12,6 +12,13 @@ class Conversation(BaseModel):
     user_id: int
     conversation_language: str
 
+    def from_query(query_result):
+        return Conversation(
+            conversation_id=query_result.get("id"),
+            user_id=query_result.get("user_id"),
+            conversation_language=query_result.get("conversation_language"),
+        )
+
 
 async def create_conversation(db_conn: asyncpg.Connection, user: User, conversation_language: str) -> Conversation:
     async with db_conn.transaction():
@@ -26,11 +33,7 @@ async def create_conversation(db_conn: asyncpg.Connection, user: User, conversat
             user.user_id,
         )
 
-    return Conversation(
-        conversation_id=conversation.get("id"),
-        user_id=conversation.get("user_id"),
-        conversation_language=conversation.get("conversation_language"),
-    )
+    return Conversation.from_query(conversation)
 
 async def get_conversation(db_conn: asyncpg.Connection, conversation_id: int) -> Conversation:
     pass
