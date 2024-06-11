@@ -14,12 +14,6 @@ class User(BaseModel):
     active_conversation_id: Optional[int]
 
 
-class Conversation(BaseModel):
-    conversation_id: int
-    user_id: int
-    conversation_language: str
-
-
 class Message(BaseModel):
     message_id: int
     user_id: int
