@@ -1,17 +1,9 @@
 import asyncpg
+
 from pydantic import BaseModel
 from typing import List, Optional
 
-
-LANGUAGE_MAPPING = {
-    "en": "English",
-    "es": "Spanish",
-    "fr": "French",
-    "de": "German",
-    "it": "Italian",
-    "tr": "Turkish",
-    "pt-BR": "Brazilian Portuguese",
-}
+from .constants import LANGUAGE_MAPPING
 
 
 class User(BaseModel):
