@@ -3,7 +3,6 @@ CREATE TABLE users (
     active_conversation_id INTEGER DEFAULT NULL,
     discord_username VARCHAR(255) NOT NULL UNIQUE,
     spoken_language VARCHAR(255),
-    learning_language VARCHAR(255),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
