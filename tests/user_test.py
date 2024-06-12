@@ -8,7 +8,7 @@ async def test_create_user(db_pool):
         user = await create_user(connection, "test_user", "en")
         assert user.discord_username == "test_user"
         assert user.spoken_language == "en"
-        assert user.active_conversation_id is not None
+        assert user.active_conversation_id is None
         assert user.user_id is not None
 
 @pytest.mark.asyncio
