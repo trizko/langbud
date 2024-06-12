@@ -10,7 +10,6 @@ class User(BaseModel):
     user_id: int
     discord_username: str
     spoken_language: str
-    learning_language: str
     active_conversation_id: Optional[int]
 
 
@@ -33,32 +32,18 @@ async def create_user(
     db_conn: asyncpg.Connection,
     discord_username: str,
     spoken_language: str,
-    learning_language: str,
 ) -> User:
-    async with db_conn.transaction():
-        new_user = await db_conn.fetchrow(
-            "INSERT INTO users (discord_username, spoken_language, learning_language) VALUES ($1, $2, $3) RETURNING *",
-            discord_username,
-            spoken_language,
-            learning_language,
-        )
-        new_conversation = await db_conn.fetchrow(
-            "INSERT INTO conversations (user_id, conversation_language) VALUES ($1, $2) RETURNING *",
-            new_user.get("id"),
-            new_user.get("learning_language"),
-        )
-        user = await db_conn.fetchrow(
-            "UPDATE users SET active_conversation_id = $1 WHERE id = $2 RETURNING *",
-            new_conversation.get("id"),
-            new_user.get("id"),
-        )
+    new_user = await db_conn.fetchrow(
+        "INSERT INTO users (discord_username, spoken_language) VALUES ($1, $2) RETURNING *",
+        discord_username,
+        spoken_language,
+    )
 
     return User(
-        user_id=user.get("id"),
-        discord_username=user.get("discord_username"),
-        spoken_language=user.get("spoken_language"),
-        learning_language=user.get("learning_language"),
-        active_conversation_id=user.get("active_conversation_id"),
+        user_id=new_user.get("id"),
+        discord_username=new_user.get("discord_username"),
+        spoken_language=new_user.get("spoken_language"),
+        active_conversation_id=new_user.get("active_conversation_id"),
     )
 
 
