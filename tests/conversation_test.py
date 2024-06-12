@@ -29,9 +29,10 @@ async def test_get_conversation(db_pool):
 @pytest.mark.asyncio
 async def test_get_conversations_by_user_id(db_pool):
     async with db_pool.acquire() as connection:
-        user = await create_user(connection, "test_get_conversations_by_user_id", "en")
-        conversation = await create_conversation(connection, user, "es")
-        conversations = await get_conversations_by_user_id(connection, user.user_id)
+        new_user = await create_user(connection, "test_get_conversations_by_user_id", "en")
+        conversation = await create_conversation(connection, new_user, "es")
+        conversations = await get_conversations_by_user_id(connection, new_user.user_id)
+        user = await get_user(connection, new_user.user_id)
         assert len(conversations) == 1
         assert conversations[0].user_id == user.user_id
         assert conversations[0].conversation_language == "es"
