@@ -78,13 +78,11 @@ async def get_user(db_conn: asyncpg.Connection, user_id: int) -> User:
 async def update_user(
     db_conn: asyncpg.Connection,
     user_id: int,
-    spoken_language: str,
-    learning_language: str,
+    active_conversation_id: int,
 ) -> User:
     user = await db_conn.fetchrow(
-        "UPDATE users SET spoken_language = $1, learning_language = $2 WHERE id = $3 RETURNING *",
-        spoken_language,
-        learning_language,
+        "UPDATE users SET active_conversation_id = $1 WHERE id = $2 RETURNING *",
+        active_conversation_id,
         user_id,
     )
     if not user:
@@ -94,7 +92,6 @@ async def update_user(
         user_id=user.get("id"),
         discord_username=user.get("discord_username"),
         spoken_language=user.get("spoken_language"),
-        learning_language=user.get("learning_language"),
         active_conversation_id=user.get("active_conversation_id"),
     )
 
