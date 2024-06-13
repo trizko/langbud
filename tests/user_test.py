@@ -1,6 +1,6 @@
 import pytest
 
-from models.user import User, create_user, get_user, get_user_by_discord_username, update_user, delete_user
+from models.user import User, create_user, get_user, get_user_by_discord_username, update_user, update_user_language, delete_user
 
 @pytest.mark.asyncio
 async def test_create_user(db_pool):
@@ -45,6 +45,20 @@ async def test_update_user(db_pool):
         assert user.discord_username == "test_update_user"
         assert user.spoken_language == "en"
         assert user.active_conversation_id == 420
+
+@pytest.mark.asyncio
+async def test_update_user_language(db_pool):
+    async with db_pool.acquire() as connection:
+        new_user = await create_user(connection, "test_update_user_language", "en")
+        assert new_user.spoken_language == "en"
+
+        await update_user_language(connection, new_user, "es")
+        user = await get_user(connection, new_user.user_id)
+
+        assert user.user_id == new_user.user_id
+        assert user.discord_username == "test_update_user_language"
+        assert user.spoken_language == "es"
+        assert user.active_conversation_id is None
 
 @pytest.mark.asyncio
 async def test_delete_user(db_pool):
