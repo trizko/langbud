@@ -21,13 +21,6 @@ class User(BaseModel):
         )
 
 
-class Explanation(BaseModel):
-    explanation_id: int
-    user_id: int
-    message_id: int
-    explanation_text: str
-
-
 async def create_user(
     db_conn: asyncpg.Connection,
     discord_username: str,
