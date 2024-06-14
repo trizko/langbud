@@ -21,14 +21,6 @@ class User(BaseModel):
         )
 
 
-class Message(BaseModel):
-    message_id: int
-    user_id: int
-    conversation_id: int
-    is_from_user: bool
-    message_text: str
-
-
 class Explanation(BaseModel):
     explanation_id: int
     user_id: int
