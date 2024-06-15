@@ -112,46 +112,6 @@ async def get_messages_by_user(db_conn: asyncpg.Connection, user: User) -> List[
     return formatted_messages
 
 
-async def create_message(
-    db_conn: asyncpg.Connection,
-    user: User,
-    is_from_user: bool,
-    message_text: str,
-) -> Message:
-    message = await db_conn.fetchrow(
-        "INSERT INTO messages (user_id, is_from_user, message_text, message_language) VALUES ($1, $2, $3, $4) RETURNING *",
-        user.user_id,
-        is_from_user,
-        message_text,
-        user.learning_language,
-    )
-
-    return Message(
-        message_id=message.get("id"),
-        user_id=message.get("user_id"),
-        is_from_user=message.get("is_from_user"),
-        message_text=message.get("message_text"),
-        message_language=message.get("message_language"),
-    )
-
-
-async def get_last_message(db_conn: asyncpg.Connection, user: User) -> Message:
-    message = await db_conn.fetchrow(
-        "SELECT * FROM messages WHERE user_id = $1 AND is_from_user = false AND message_language = $2 ORDER BY id DESC LIMIT 1",
-        user.user_id,
-        user.learning_language,
-    )
-    if not message:
-        return None
-
-    return Message(
-        message_id=message.get("id"),
-        user_id=message.get("user_id"),
-        is_from_user=message.get("is_from_user"),
-        message_text=message.get("message_text"),
-        message_language=message.get("message_language"),
-    )
-
 async def create_explanation(db_conn: asyncpg.Connection, message: Message, explanation_text: str) -> Explanation:
     explanation = await db_conn.fetchrow(
         "INSERT INTO explanations (user_id, message_id, explanation_text) VALUES ($1, $2, $3) RETURNING *",
@@ -166,6 +126,7 @@ async def create_explanation(db_conn: asyncpg.Connection, message: Message, expl
         message_id=explanation.get("message_id"),
         explanation_text=explanation.get("explanation_text"),
     )
+
 
 async def get_explanation_by_message(db_conn: asyncpg.Connection, message: Message) -> Explanation:
     explanation = await db_conn.fetchrow(
