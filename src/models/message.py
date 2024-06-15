@@ -58,3 +58,11 @@ async def get_messages_by_conversation_id(db_conn: asyncpg.Connection, conversat
     )
     return [Message.from_query(message) for message in messages]
 
+
+async def get_message(db_conn: asyncpg.Connection, message_id: int) -> Message:
+    message = await db_conn.fetchrow("SELECT * FROM messages WHERE id = $1", message_id)
+    if not message:
+        return None
+
+    return Message.from_query(message)
+
