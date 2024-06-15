@@ -1,13 +1,14 @@
 import pytest
 
-from models.user import User, create_user
+from models.user import User, create_user, get_user
+from models.conversation import create_conversation
 from models.message import Message, create_message, get_last_message_by_user, get_messages_by_conversation_id, get_message, delete_message
 
 
 @pytest.mark.asyncio
 async def test_create_message(db_pool):
     async with db_pool.acquire() as connection:
-        new_user = await create_user(connection, "test_get_last_message_by_user", "en")
+        new_user = await create_user(connection, "test_create_message", "en")
         conversation = await create_conversation(connection, new_user, "es")
         user = await get_user(connection, new_user.user_id)
 
@@ -42,7 +43,7 @@ async def test_get_last_message_by_user(db_pool):
 @pytest.mark.asyncio
 async def test_get_messages_by_conversation_id(db_pool):
     async with db_pool.acquire() as connection:
-        new_user = await create_user(connection, "test_get_last_message_by_user", "en")
+        new_user = await create_user(connection, "test_get_messages_by_conversation_id", "en")
         conversation = await create_conversation(connection, new_user, "es")
         user = await get_user(connection, new_user.user_id)
 
@@ -58,7 +59,7 @@ async def test_get_messages_by_conversation_id(db_pool):
 @pytest.mark.asyncio
 async def test_get_message(db_pool):
     async with db_pool.acquire() as connection:
-        new_user = await create_user(connection, "test_get_last_message_by_user", "en")
+        new_user = await create_user(connection, "test_get_message", "en")
         conversation = await create_conversation(connection, new_user, "es")
         user = await get_user(connection, new_user.user_id)
         new_message = await create_message(connection, user, True, "test_get_message")
@@ -74,7 +75,7 @@ async def test_get_message(db_pool):
 @pytest.mark.asyncio
 async def test_delete_message(db_pool):
     async with db_pool.acquire() as connection:
-        new_user = await create_user(connection, "test_get_last_message_by_user", "en")
+        new_user = await create_user(connection, "test_delete_message", "en")
         conversation = await create_conversation(connection, new_user, "es")
         user = await get_user(connection, new_user.user_id)
         new_message = await create_message(connection, user, True, "test_get_message")
