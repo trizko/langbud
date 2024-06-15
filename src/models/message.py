@@ -1,3 +1,5 @@
+import asyncpg
+
 from pydantic import BaseModel
 
 
