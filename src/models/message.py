@@ -41,17 +41,13 @@ async def create_message(
 
 async def get_last_message_by_user(db_conn: asyncpg.Connection, user: User) -> Message:
     message = await db_conn.fetchrow(
-        "SELECT * FROM messages WHERE user_id = $1 AND is_from_user = false AND message_language = $2 ORDER BY id DESC LIMIT 1",
+        "SELECT * FROM messages WHERE user_id = $1 AND is_from_user = false AND conversation_id = $2 ORDER BY id DESC LIMIT 1",
         user.user_id,
-        user.learning_language,
+        user.active_conversation_id,
     )
     if not message:
         return None
 
-    return Message(
-        message_id=message.get("id"),
-        user_id=message.get("user_id"),
-        is_from_user=message.get("is_from_user"),
-        message_text=message.get("message_text"),
-        message_language=message.get("message_language"),
+    return Message.from_query(message)
+
     )
