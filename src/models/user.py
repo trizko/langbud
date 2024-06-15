@@ -4,7 +4,6 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 from .constants import LANGUAGE_MAPPING
-from .message import Message
 
 
 class User(BaseModel):
@@ -111,35 +110,3 @@ async def get_messages_by_user(db_conn: asyncpg.Connection, user: User) -> List[
     ]
     formatted_messages.insert(0, system_message)
     return formatted_messages
-
-
-async def create_explanation(db_conn: asyncpg.Connection, message: Message, explanation_text: str) -> Explanation:
-    explanation = await db_conn.fetchrow(
-        "INSERT INTO explanations (user_id, message_id, explanation_text) VALUES ($1, $2, $3) RETURNING *",
-        message.user_id,
-        message.message_id,
-        explanation_text,
-    )
-
-    return Explanation(
-        explanation_id=explanation.get("id"),
-        user_id=explanation.get("user_id"),
-        message_id=explanation.get("message_id"),
-        explanation_text=explanation.get("explanation_text"),
-    )
-
-
-async def get_explanation_by_message(db_conn: asyncpg.Connection, message: Message) -> Explanation:
-    explanation = await db_conn.fetchrow(
-        "SELECT * FROM explanations WHERE message_id = $1",
-        message.message_id,
-    )
-    if not explanation:
-        return None
-
-    return Explanation(
-        explanation_id=explanation.get("id"),
-        user_id=explanation.get("user_id"),
-        message_id=explanation.get("message_id"),
-        explanation_text=explanation.get("explanation_text"),
-    )
