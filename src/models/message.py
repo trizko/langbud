@@ -66,3 +66,11 @@ async def get_message(db_conn: asyncpg.Connection, message_id: int) -> Message:
 
     return Message.from_query(message)
 
+
+async def delete_message(db_conn: asyncpg.Connection, message_id: int):
+    try:
+        await db_conn.execute("DELETE FROM messages WHERE id = $1", message_id)
+    except Exception:
+        return False
+
+    return True
