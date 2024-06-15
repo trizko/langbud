@@ -29,20 +29,14 @@ async def create_message(
     message_text: str,
 ) -> Message:
     message = await db_conn.fetchrow(
-        "INSERT INTO messages (user_id, is_from_user, message_text, message_language) VALUES ($1, $2, $3, $4) RETURNING *",
+        "INSERT INTO messages (user_id, conversation_id, is_from_user, message_text) VALUES ($1, $2, $3, $4) RETURNING *",
         user.user_id,
+        user.active_conversation_id,
         is_from_user,
         message_text,
-        user.learning_language,
     )
 
-    return Message(
-        message_id=message.get("id"),
-        user_id=message.get("user_id"),
-        is_from_user=message.get("is_from_user"),
-        message_text=message.get("message_text"),
-        message_language=message.get("message_language"),
-    )
+    return Message.from_query(message)
 
 
 async def get_last_message_by_user(db_conn: asyncpg.Connection, user: User) -> Message:
