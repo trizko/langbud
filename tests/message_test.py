@@ -53,7 +53,7 @@ async def test_get_messages_by_conversation_id(db_pool):
         messages = await get_messages_by_conversation_id(connection, user.active_conversation_id)
         assert len(messages) == 2
         for message in messages:
-            assert message.conversation_id == 1
+            assert message.conversation_id == conversation.conversation_id
 
 
 @pytest.mark.asyncio
@@ -66,8 +66,8 @@ async def test_get_message(db_pool):
 
         message = await get_message(connection, new_message.message_id)
         assert message.message_id is not None
-        assert message.user_id == 1
-        assert message.conversation_id == 1
+        assert message.user_id == user.user_id
+        assert message.conversation_id == conversation.conversation_id
         assert message.is_from_user == True
         assert message.message_text == "test_get_message"
 
