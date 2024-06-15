@@ -10,6 +10,14 @@ class Explanation(BaseModel):
     message_id: int
     explanation_text: str
 
+    def from_query(query_result):
+        return Explanation(
+            explanation_id=query_result.get("id"),
+            user_id=query_result.get("user_id"),
+            message_id=query_result.get("message_id"),
+            explanation_text=query_result.get("explanation_text"),
+        )
+
 
 async def create_explanation(db_conn: asyncpg.Connection, message: Message, explanation_text: str) -> Explanation:
     explanation = await db_conn.fetchrow(
