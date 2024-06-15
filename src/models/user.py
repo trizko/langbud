@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 from .constants import LANGUAGE_MAPPING
+from .message import Message
 
 
 class User(BaseModel):
