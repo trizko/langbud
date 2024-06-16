@@ -27,12 +27,7 @@ async def create_explanation(db_conn: asyncpg.Connection, message: Message, expl
         explanation_text,
     )
 
-    return Explanation(
-        explanation_id=explanation.get("id"),
-        user_id=explanation.get("user_id"),
-        message_id=explanation.get("message_id"),
-        explanation_text=explanation.get("explanation_text"),
-    )
+    return Explanation.from_query(explanation)
 
 
 async def get_explanation_by_message(db_conn: asyncpg.Connection, message: Message) -> Explanation:
@@ -43,9 +38,4 @@ async def get_explanation_by_message(db_conn: asyncpg.Connection, message: Messa
     if not explanation:
         return None
 
-    return Explanation(
-        explanation_id=explanation.get("id"),
-        user_id=explanation.get("user_id"),
-        message_id=explanation.get("message_id"),
-        explanation_text=explanation.get("explanation_text"),
-    )
+    return Explanation.from_query(explanation)
