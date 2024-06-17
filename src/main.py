@@ -45,9 +45,7 @@ async def create_chatbot_response(db_conn, user, prompt):
     messages = await get_messages_by_user(db_conn, user)
     response = openai_client.chat.completions.create(model="gpt-4o", messages=messages)
     content = response.choices[0].message.content
-    await create_message(
-        db_conn, user, is_from_user=False, message_text=content
-    )
+    await create_message(db_conn, user, is_from_user=False, message_text=content)
 
     return content
 
@@ -94,21 +92,28 @@ async def explain(interaction):
             explanation = await chatbot_explain(connection, user)
         await interaction.followup.send(explanation)
     except Exception as e:
-        await interaction.followup.send("An error occurred when explaining the chatbot response")
+        await interaction.followup.send(
+            "An error occurred when explaining the chatbot response"
+        )
         logger.error(f"An error occurred when explaining the chatbot response: {e}")
         return
 
 
-@tree.command(name="select-language", description="Selects the language you want to learn from list of supported options")
+@tree.command(
+    name="select-language",
+    description="Selects the language you want to learn from list of supported options",
+)
 @app_commands.describe(languages="Select the language you want to learn")
-@app_commands.choices(languages=[
-    app_commands.Choice(name="Spanish", value="es"),
-    app_commands.Choice(name="French", value="fr"),
-    app_commands.Choice(name="German", value="de"),
-    app_commands.Choice(name="Italian", value="it"),
-    app_commands.Choice(name="Brazilian Portuguese", value="pt-BR"),
-    app_commands.Choice(name="Turkish", value="tr"),
-])
+@app_commands.choices(
+    languages=[
+        app_commands.Choice(name="Spanish", value="es"),
+        app_commands.Choice(name="French", value="fr"),
+        app_commands.Choice(name="German", value="de"),
+        app_commands.Choice(name="Italian", value="it"),
+        app_commands.Choice(name="Brazilian Portuguese", value="pt-BR"),
+        app_commands.Choice(name="Turkish", value="tr"),
+    ]
+)
 async def select_language(interaction, languages: app_commands.Choice[str]):
     try:
         await interaction.response.defer()
@@ -116,15 +121,18 @@ async def select_language(interaction, languages: app_commands.Choice[str]):
         async with db_pool.acquire() as connection:
             user = await get_user_by_discord_username(connection, interaction.user.name)
             if not user:
-                user = await create_user(connection, interaction.user.name, "en", languages.value)
+                user = await create_user(
+                    connection, interaction.user.name, "en", languages.value
+                )
             else:
                 user = await update_user_language(connection, user, languages.value)
-        await interaction.followup.send(f"User language successfully set to {LANGUAGE_MAPPING[user.learning_language]}")
+        await interaction.followup.send(
+            f"User language successfully set to {LANGUAGE_MAPPING[user.learning_language]}"
+        )
     except Exception as e:
         await interaction.followup.send("An error occurred when selecting the language")
         logger.error(f"An error occurred when selecting the language: {e}")
         return
-
 
 
 @discord_client.event

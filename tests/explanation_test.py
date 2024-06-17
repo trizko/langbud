@@ -13,8 +13,12 @@ async def test_create_explanation(db_pool):
         await create_conversation(connection, new_user, "es")
         user = await get_user(connection, new_user.user_id)
 
-        message = await create_message(connection, user, True, "test_create_explanation")
-        explanation = await create_explanation(connection, message, "test_create_explanation")
+        message = await create_message(
+            connection, user, True, "test_create_explanation"
+        )
+        explanation = await create_explanation(
+            connection, message, "test_create_explanation"
+        )
         assert explanation.user_id == user.user_id
         assert explanation.message_id == message.message_id
         assert explanation.explanation_text == "test_create_explanation"
@@ -23,11 +27,15 @@ async def test_create_explanation(db_pool):
 @pytest.mark.asyncio
 async def test_get_explanation_by_message(db_pool):
     async with db_pool.acquire() as connection:
-        new_user = await create_user(connection, "test_get_explanation_by_message", "en")
+        new_user = await create_user(
+            connection, "test_get_explanation_by_message", "en"
+        )
         await create_conversation(connection, new_user, "es")
         user = await get_user(connection, new_user.user_id)
 
-        message = await create_message(connection, user, True, "test_get_explanation_by_message")
+        message = await create_message(
+            connection, user, True, "test_get_explanation_by_message"
+        )
         await create_explanation(connection, message, "test_get_explanation_by_message")
         result = await get_explanation_by_message(connection, message)
         assert result.user_id == user.user_id

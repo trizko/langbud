@@ -35,8 +35,12 @@ async def create_user(
     return User.from_query(new_user)
 
 
-async def get_user_by_discord_username(db_conn: asyncpg.Connection, discord_username: str) -> User:
-    user = await db_conn.fetchrow("SELECT * FROM users WHERE discord_username = $1", discord_username)
+async def get_user_by_discord_username(
+    db_conn: asyncpg.Connection, discord_username: str
+) -> User:
+    user = await db_conn.fetchrow(
+        "SELECT * FROM users WHERE discord_username = $1", discord_username
+    )
     if not user:
         return None
 
@@ -67,7 +71,9 @@ async def update_user(
     return User.from_query(user)
 
 
-async def update_user_language(db_conn: asyncpg.Connection, user: User, spoken_language: str) -> User:
+async def update_user_language(
+    db_conn: asyncpg.Connection, user: User, spoken_language: str
+) -> User:
     user = await db_conn.fetchrow(
         "UPDATE users SET spoken_language = $1 WHERE id = $2 RETURNING *",
         spoken_language,

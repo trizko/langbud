@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 from .message import Message
 
+
 class Explanation(BaseModel):
     explanation_id: int
     user_id: int
@@ -19,7 +20,9 @@ class Explanation(BaseModel):
         )
 
 
-async def create_explanation(db_conn: asyncpg.Connection, message: Message, explanation_text: str) -> Explanation:
+async def create_explanation(
+    db_conn: asyncpg.Connection, message: Message, explanation_text: str
+) -> Explanation:
     explanation = await db_conn.fetchrow(
         "INSERT INTO explanations (user_id, message_id, explanation_text) VALUES ($1, $2, $3) RETURNING *",
         message.user_id,
@@ -30,7 +33,9 @@ async def create_explanation(db_conn: asyncpg.Connection, message: Message, expl
     return Explanation.from_query(explanation)
 
 
-async def get_explanation_by_message(db_conn: asyncpg.Connection, message: Message) -> Explanation:
+async def get_explanation_by_message(
+    db_conn: asyncpg.Connection, message: Message
+) -> Explanation:
     explanation = await db_conn.fetchrow(
         "SELECT * FROM explanations WHERE message_id = $1",
         message.message_id,

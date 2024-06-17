@@ -19,7 +19,9 @@ class Conversation(BaseModel):
         )
 
 
-async def create_conversation(db_conn: asyncpg.Connection, user: User, conversation_language: str) -> Conversation:
+async def create_conversation(
+    db_conn: asyncpg.Connection, user: User, conversation_language: str
+) -> Conversation:
     async with db_conn.transaction():
         conversation = await db_conn.fetchrow(
             "INSERT INTO conversations (user_id, conversation_language) VALUES ($1, $2) RETURNING *",
@@ -34,7 +36,10 @@ async def create_conversation(db_conn: asyncpg.Connection, user: User, conversat
 
     return Conversation.from_query(conversation)
 
-async def get_conversation(db_conn: asyncpg.Connection, conversation_id: int) -> Conversation:
+
+async def get_conversation(
+    db_conn: asyncpg.Connection, conversation_id: int
+) -> Conversation:
     conversation = await db_conn.fetchrow(
         "SELECT * FROM conversations WHERE id = $1",
         conversation_id,
@@ -42,7 +47,10 @@ async def get_conversation(db_conn: asyncpg.Connection, conversation_id: int) ->
 
     return Conversation.from_query(conversation)
 
-async def get_conversations_by_user_id(db_conn: asyncpg.Connection, user_id: int) -> List[Conversation]:
+
+async def get_conversations_by_user_id(
+    db_conn: asyncpg.Connection, user_id: int
+) -> List[Conversation]:
     conversations = await db_conn.fetch(
         "SELECT * FROM conversations WHERE user_id = $1",
         user_id,

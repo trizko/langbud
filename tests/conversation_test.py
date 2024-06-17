@@ -1,6 +1,10 @@
 import pytest
 
-from models.conversation import create_conversation, get_conversation, get_conversations_by_user_id
+from models.conversation import (
+    create_conversation,
+    get_conversation,
+    get_conversations_by_user_id,
+)
 from models.user import create_user, get_user
 
 
@@ -14,6 +18,7 @@ async def test_create_conversation(db_pool):
         assert conversation.conversation_language == "es"
         assert conversation.conversation_id == user.active_conversation_id
 
+
 @pytest.mark.asyncio
 async def test_get_conversation(db_pool):
     async with db_pool.acquire() as connection:
@@ -26,10 +31,13 @@ async def test_get_conversation(db_pool):
         assert conversation.conversation_language == "es"
         assert conversation.conversation_id == user.active_conversation_id
 
+
 @pytest.mark.asyncio
 async def test_get_conversations_by_user_id(db_pool):
     async with db_pool.acquire() as connection:
-        new_user = await create_user(connection, "test_get_conversations_by_user_id", "en")
+        new_user = await create_user(
+            connection, "test_get_conversations_by_user_id", "en"
+        )
         await create_conversation(connection, new_user, "es")
         conversations = await get_conversations_by_user_id(connection, new_user.user_id)
         user = await get_user(connection, new_user.user_id)

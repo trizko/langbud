@@ -2,7 +2,13 @@ import pytest
 
 from models.user import create_user, get_user
 from models.conversation import create_conversation
-from models.message import create_message, get_last_message_by_user, get_messages_by_conversation_id, get_message, delete_message
+from models.message import (
+    create_message,
+    get_last_message_by_user,
+    get_messages_by_conversation_id,
+    get_message,
+    delete_message,
+)
 
 
 @pytest.mark.asyncio
@@ -43,14 +49,22 @@ async def test_get_last_message_by_user(db_pool):
 @pytest.mark.asyncio
 async def test_get_messages_by_conversation_id(db_pool):
     async with db_pool.acquire() as connection:
-        new_user = await create_user(connection, "test_get_messages_by_conversation_id", "en")
+        new_user = await create_user(
+            connection, "test_get_messages_by_conversation_id", "en"
+        )
         conversation = await create_conversation(connection, new_user, "es")
         user = await get_user(connection, new_user.user_id)
 
-        await create_message(connection, user, True, "test_get_messages_by_conversation_id_1")
-        await create_message(connection, user, True, "test_get_messages_by_conversation_id_2")
+        await create_message(
+            connection, user, True, "test_get_messages_by_conversation_id_1"
+        )
+        await create_message(
+            connection, user, True, "test_get_messages_by_conversation_id_2"
+        )
 
-        messages = await get_messages_by_conversation_id(connection, user.active_conversation_id)
+        messages = await get_messages_by_conversation_id(
+            connection, user.active_conversation_id
+        )
         assert len(messages) == 2
         for message in messages:
             assert message.conversation_id == conversation.conversation_id

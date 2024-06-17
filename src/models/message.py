@@ -51,7 +51,9 @@ async def get_last_message_by_user(db_conn: asyncpg.Connection, user: User) -> M
     return Message.from_query(message)
 
 
-async def get_messages_by_conversation_id(db_conn: asyncpg.Connection, conversation_id: int) -> list[Message]:
+async def get_messages_by_conversation_id(
+    db_conn: asyncpg.Connection, conversation_id: int
+) -> list[Message]:
     messages = await db_conn.fetch(
         "SELECT * FROM messages WHERE conversation_id = $1",
         conversation_id,
