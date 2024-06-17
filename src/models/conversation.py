@@ -3,7 +3,6 @@ import asyncpg
 from pydantic import BaseModel
 from typing import List
 
-from .constants import LANGUAGE_MAPPING
 from .user import User
 
 
