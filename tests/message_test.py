@@ -20,8 +20,8 @@ async def test_create_message(db_pool):
 
         message = await create_message(connection, user, True, "test_create_message")
         assert message.message_id is not None
-        assert message.user_id == 1
-        assert message.conversation_id == 1
+        assert message.user_id == user.user_id
+        assert message.conversation_id == user.active_conversation_id
         assert message.is_from_user is True
         assert message.message_text == "test_create_message"
 
