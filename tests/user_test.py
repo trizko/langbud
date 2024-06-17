@@ -1,6 +1,6 @@
 import pytest
 
-from models.user import User, create_user, get_user, get_user_by_discord_username, update_user, update_user_language, delete_user
+from models.user import create_user, get_user, get_user_by_discord_username, update_user, update_user_language, delete_user
 
 @pytest.mark.asyncio
 async def test_create_user(db_pool):

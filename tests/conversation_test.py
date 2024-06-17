@@ -1,7 +1,7 @@
 import pytest
 
-from models.conversation import Conversation, create_conversation, get_conversation, get_conversations_by_user_id
-from models.user import User, create_user, get_user
+from models.conversation import create_conversation, get_conversation, get_conversations_by_user_id
+from models.user import create_user, get_user
 
 
 @pytest.mark.asyncio
@@ -30,7 +30,7 @@ async def test_get_conversation(db_pool):
 async def test_get_conversations_by_user_id(db_pool):
     async with db_pool.acquire() as connection:
         new_user = await create_user(connection, "test_get_conversations_by_user_id", "en")
-        conversation = await create_conversation(connection, new_user, "es")
+        await create_conversation(connection, new_user, "es")
         conversations = await get_conversations_by_user_id(connection, new_user.user_id)
         user = await get_user(connection, new_user.user_id)
         assert len(conversations) == 1
