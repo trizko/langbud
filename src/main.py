@@ -94,7 +94,7 @@ async def explain(interaction):
             explanation = await chatbot_explain(connection, user)
         await interaction.followup.send(explanation)
     except Exception as e:
-        await interaction.followup.send(f"An error occurred when explaining the chatbot response")
+        await interaction.followup.send("An error occurred when explaining the chatbot response")
         logger.error(f"An error occurred when explaining the chatbot response: {e}")
         return
 
@@ -121,7 +121,7 @@ async def select_language(interaction, languages: app_commands.Choice[str]):
                 user = await update_user_language(connection, user, languages.value)
         await interaction.followup.send(f"User language successfully set to {LANGUAGE_MAPPING[user.learning_language]}")
     except Exception as e:
-        await interaction.followup.send(f"An error occurred when selecting the language")
+        await interaction.followup.send("An error occurred when selecting the language")
         logger.error(f"An error occurred when selecting the language: {e}")
         return
 
