@@ -13,17 +13,11 @@ from fastapi import FastAPI
 from openai import OpenAI
 from pydantic import BaseModel
 
-from models.user import (
-    create_user,
-    get_user_by_discord_username,
-    create_message,
-    create_explanation,
-    get_explanation_by_message,
-    get_messages_by_user,
-    get_last_message,
-    update_user_language,
-    LANGUAGE_MAPPING,
-)
+from models.constants import LANGUAGE_MAPPING
+from models.conversation import create_conversation
+from models.explanation import create_explanation, get_explanation_by_message
+from models.message import get_last_message, create_message
+from models.user import get_user_by_discord_username, create_user, update_user
 
 from db import Database
 
@@ -78,6 +72,40 @@ intents.messages = True
 intents.message_content = True
 discord_client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(discord_client)
+
+
+@tree.command(
+    name="create-conversation",
+    description="Creates a new conversation with the chosen language",
+)
+@app_commands.choices(
+    languages=[
+        app_commands.Choice(name="Spanish", value="es"),
+        app_commands.Choice(name="French", value="fr"),
+        app_commands.Choice(name="German", value="de"),
+        app_commands.Choice(name="Italian", value="it"),
+        app_commands.Choice(name="Brazilian Portuguese", value="pt-BR"),
+        app_commands.Choice(name="Turkish", value="tr"),
+    ]
+)
+async def create_conversation(interaction, languages: app_commands.Choice[str]):
+    try:
+        await interaction.response.defer()
+        db_pool = await database.get_pool()
+        async with db_pool.acquire() as connection:
+            user = await get_user_by_discord_username(connection, interaction.user.name)
+            if not user:
+                user = await create_user(connection, interaction.user.name, "en")
+
+            conversation = await create_conversation(connection, user, languages.value)
+            user = await update_user(connection, user.user_id, conversation.conversation_id)
+        await interaction.followup.send(
+            f"Conversation successfully created with {LANGUAGE_MAPPING[conversation.conversation_language]} language"
+        )
+    except Exception as e:
+        await interaction.followup.send("An error occurred when creating the conversation")
+        logger.error(f"An error occurred when creating the conversation: {e}")
+        return
 
 
 @tree.command(
