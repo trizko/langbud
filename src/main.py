@@ -135,9 +135,19 @@ async def list_conversation(interaction):
                 await interaction.followup.send("You do not have any conversations")
                 return
 
+
+            # Prepare table header
             response = "Your conversations are:\n"
+            response += "```"
+            response += f"{'Conversation ID':<20} {'Language':<10}\n"
+            response += f"{'-' * 20} {'-' * 10}\n"
+
+            # Add table rows
             for conversation in conversations:
-                response += f"Conversation ID: {conversation.conversation_id}, Language: {LANGUAGE_MAPPING[conversation.conversation_language]}\n"
+                response += f"{conversation.conversation_id:<20} {LANGUAGE_MAPPING[conversation.conversation_language]:<10}\n"
+
+            response += "```"
+
             await interaction.followup.send(response)
     except Exception as e:
         await interaction.followup.send("An error occurred when listing the conversations")
