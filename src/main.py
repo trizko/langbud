@@ -180,6 +180,10 @@ async def select_conversation(interaction, conversation_id: int):
                 await interaction.followup.send("You do not have any conversations. Create one with the `/new-conversation <language>` slash command.")
                 return
 
+            if conversation_id > len(conversations) or conversation_id < 1:
+                await interaction.followup.send("Invalid conversation ID")
+                return
+
             conversation = conversations[conversation_id - 1]
 
             user = await update_user(connection, user.user_id, conversation.conversation_id)
