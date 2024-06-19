@@ -1,9 +1,28 @@
 import os
+import time
+
+import asyncpg
+import docker
 import pytest
 import pytest_asyncio
-import docker
-import time
-import asyncpg
+
+import psycopg2
+from psycopg2 import OperationalError
+
+
+def wait_for_pg_ready(host, port, user, password, db, timeout=60):
+    start_time = time.time()
+    while True:
+        try:
+            conn = psycopg2.connect(
+                host=host, port=port, user=user, password=password, dbname=db
+            )
+            conn.close()
+            break
+        except OperationalError:
+            if time.time() - start_time >= timeout:
+                raise TimeoutError("Could not connect to the PostgreSQL server.")
+            time.sleep(0.5)
 
 
 @pytest.fixture(scope="session")
