@@ -92,27 +92,3 @@ async def delete_user(db_conn: asyncpg.Connection, user_id: int):
         return False
 
     return True
-
-
-async def get_messages_by_user(db_conn: asyncpg.Connection, user: User) -> List[dict]:
-    messages = await db_conn.fetch(
-        "SELECT is_from_user, message_text FROM messages WHERE user_id = $1 AND message_language = $2 ORDER BY id ASC LIMIT 50",
-        user.user_id,
-        user.learning_language,
-    )
-    if not messages:
-        return []
-
-    system_message = {
-        "role": "system",
-        "content": f"You are a friendly {LANGUAGE_MAPPING[user.learning_language]}-speaking chatbot named Maya. Your task is to help the user learn {LANGUAGE_MAPPING[user.learning_language]}. You should continue the conversation in {LANGUAGE_MAPPING[user.learning_language]}, but if the user makes a mistake, correct them in {LANGUAGE_MAPPING[user.spoken_language]}.",
-    }
-    formatted_messages = [
-        {
-            "role": "user" if message.get("is_from_user") else "assistant",
-            "content": message.get("message_text"),
-        }
-        for message in messages
-    ]
-    formatted_messages.insert(0, system_message)
-    return formatted_messages
