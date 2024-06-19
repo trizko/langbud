@@ -14,10 +14,11 @@ from openai import OpenAI
 from pydantic import BaseModel
 
 from models.constants import LANGUAGE_MAPPING
-from models.conversation import create_conversation
+from models.conversation import create_conversation, get_conversation, get_conversations_by_user_id
 from models.explanation import create_explanation, get_explanation_by_message
-from models.message import get_last_message, create_message
+from models.message import get_last_message_by_user, create_message, get_messages_by_conversation_id
 from models.user import get_user_by_discord_username, create_user, update_user
+from models.utils import format_messages_openai
 
 from db import Database
 
@@ -34,12 +35,18 @@ openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 async def create_chatbot_response(db_conn, user, prompt):
-    logger.info(f"Creating chatbot response for user {user} with prompt: {prompt}")
-    await create_message(db_conn, user, is_from_user=True, message_text=prompt)
-    messages = await get_messages_by_user(db_conn, user)
-    response = openai_client.chat.completions.create(model="gpt-4o", messages=messages)
-    content = response.choices[0].message.content
-    await create_message(db_conn, user, is_from_user=False, message_text=content)
+    try:
+        logger.info(f"Creating chatbot response for user {user} with prompt: {prompt}")
+        await create_message(db_conn, user, is_from_user=True, message_text=prompt)
+        conversation = await get_conversation(db_conn, user.active_conversation_id)
+        raw_messages = await get_messages_by_conversation_id(db_conn, user.active_conversation_id)
+        messages = await format_messages_openai(db_conn, user, raw_messages, conversation.conversation_language)
+        response = openai_client.chat.completions.create(model="gpt-4o", messages=messages)
+        content = response.choices[0].message.content
+        await create_message(db_conn, user, is_from_user=False, message_text=content)
+    except Exception as e:
+        logger.error(f"An error occurred when creating chatbot response: {e}")
+        return "An error occurred when creating chatbot response"
 
     return content
 
