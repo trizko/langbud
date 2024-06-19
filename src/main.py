@@ -239,6 +239,11 @@ async def on_message(message):
         if not user:
             user = await create_user(connection, message.author.name, "en", "es")
 
+        # Check if the user has an active conversation
+        if not user.active_conversation_id:
+            await message.channel.send("You do not have an active conversation. Create one with the `/new-conversation <language>` slash command.")
+            return
+
         # Respond to direct messages
         if isinstance(message.channel, discord.DMChannel):
             response = await create_chatbot_response(connection, user, message.content)
