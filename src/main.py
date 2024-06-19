@@ -110,21 +110,27 @@ async def create_conversation(interaction, languages: app_commands.Choice[str]):
 
 
 @tree.command(
-    name="explain", description="explains the chatbots last response in detail"
+    name="list-conversations",
+    description="Lists all your conversations and their associated languages",
 )
-async def explain(interaction):
+async def list_conversation(interaction):
     try:
-        await interaction.response.defer(ephemeral=False, thinking=True)
+        await interaction.response.defer()
         db_pool = await database.get_pool()
         async with db_pool.acquire() as connection:
             user = await get_user_by_discord_username(connection, interaction.user.name)
-            explanation = await chatbot_explain(connection, user)
-        await interaction.followup.send(explanation)
+            conversations = await get_conversations_by_user(connection, user)
+            if not conversations:
+                await interaction.followup.send("You do not have any conversations")
+                return
+
+            response = "Your conversations are:\n"
+            for conversation in conversations:
+                response += f"Conversation ID: {conversation.conversation_id}, Language: {LANGUAGE_MAPPING[conversation.conversation_language]}\n"
+            await interaction.followup.send(response)
     except Exception as e:
-        await interaction.followup.send(
-            "An error occurred when explaining the chatbot response"
-        )
-        logger.error(f"An error occurred when explaining the chatbot response: {e}")
+        await interaction.followup.send("An error occurred when listing the conversations")
+        logger.error(f"An error occurred when listing the conversations: {e}")
         return
 
 
