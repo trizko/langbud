@@ -127,7 +127,10 @@ async def list_conversation(interaction):
         db_pool = await database.get_pool()
         async with db_pool.acquire() as connection:
             user = await get_user_by_discord_username(connection, interaction.user.name)
-            conversations = await get_conversations_by_user(connection, user)
+            if not user:
+                user = await create_user(connection, interaction.user.name, "en")
+
+            conversations = await get_conversations_by_user_id(connection, user.user_id)
             if not conversations:
                 await interaction.followup.send("You do not have any conversations")
                 return
