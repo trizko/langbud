@@ -132,7 +132,7 @@ async def list_conversation(interaction):
 
             conversations = await get_conversations_by_user_id(connection, user.user_id)
             if not conversations:
-                await interaction.followup.send("You do not have any conversations")
+                await interaction.followup.send("You do not have any conversations. Create one with the `/new-conversation <language>` slash command.")
                 return
 
 
