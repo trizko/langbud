@@ -52,7 +52,8 @@ async def create_chatbot_response(db_conn, user, prompt):
 
 
 async def chatbot_explain(db_conn, user):
-    latest_message = await get_last_message(db_conn, user)
+    latest_message = await get_last_message_by_user(db_conn, user)
+    conversation = await get_conversation(db_conn, user.active_conversation_id)
     explanation = await get_explanation_by_message(db_conn, latest_message)
     if explanation:
         return explanation
@@ -60,7 +61,7 @@ async def chatbot_explain(db_conn, user):
     explain_messages = [
         {
             "role": "system",
-            "content": f"You are a friendly {LANGUAGE_MAPPING[user.learning_language]}-teaching chatbot. You take the users {LANGUAGE_MAPPING[user.learning_language]} messages and explain them word for word in {LANGUAGE_MAPPING[user.spoken_language]}. Also, include ways you can respond to this message in {LANGUAGE_MAPPING[user.learning_language]}.",
+            "content": f"You are a friendly {LANGUAGE_MAPPING[conversation.conversation_language]}-teaching chatbot. You take the users {LANGUAGE_MAPPING[conversation.conversation_language]} messages and explain them word for word in {LANGUAGE_MAPPING[user.spoken_language]}. Also, include ways you can respond to this message in {LANGUAGE_MAPPING[conversation.conversation_language]}.",
         },
     ]
     explain_messages.append({"role": "user", "content": latest_message.message_text})
