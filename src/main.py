@@ -16,7 +16,7 @@ from pydantic import BaseModel
 from models.constants import LANGUAGE_MAPPING
 from models.conversation import create_conversation, get_conversation, get_conversations_by_user_id
 from models.explanation import create_explanation, get_explanation_by_message
-from models.message import get_last_message_by_user, create_message, get_messages_by_conversation_id
+from models.message import get_last_message_by_user, create_message, get_messages_by_conversation_id, get_last_message_by_conversation_id
 from models.user import get_user_by_discord_username, create_user, update_user
 from models.utils import format_messages_openai
 
@@ -139,12 +139,13 @@ async def list_conversation(interaction):
             # Prepare table header
             response = "Your conversations are:\n"
             response += "```"
-            response += f"{'Conversation ID':<20} {'Language':<10}\n"
-            response += f"{'-' * 20} {'-' * 10}\n"
+            response += f"{'Conversation ID':<20} {'Language':<10} {'Last Message':<50}\n"
+            response += f"{'-' * 20} {'-' * 10} {'-' * 50}\n"
 
             # Add table rows
-            for conversation in conversations:
-                response += f"{conversation.conversation_id:<20} {LANGUAGE_MAPPING[conversation.conversation_language]:<10}\n"
+            for idx, conversation in enumerate(conversations):
+                latest_message = await get_last_message_by_conversation_id(connection, conversation.conversation_id)
+                response += f"{idx+1:<20} {LANGUAGE_MAPPING[conversation.conversation_language]:<10} {latest_message.message_text:<50}\n"
 
             response += "```"
 
