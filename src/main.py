@@ -56,7 +56,7 @@ async def chatbot_explain(db_conn, user):
     conversation = await get_conversation(db_conn, user.active_conversation_id)
     explanation = await get_explanation_by_message(db_conn, latest_message)
     if explanation:
-        return explanation
+        return explanation.explanation_text
 
     explain_messages = [
         {
@@ -71,7 +71,7 @@ async def chatbot_explain(db_conn, user):
     content = response.choices[0].message.content
     explanation = await create_explanation(db_conn, latest_message, content)
 
-    return explanation
+    return explanation.explanation_text
 
 
 # Setup the Discord client
