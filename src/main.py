@@ -150,7 +150,7 @@ async def list_conversation(interaction):
                      message_text = "No messages"
                 else:
                     message_text = latest_message.message_text
-                response += f"{idx+1:<20} {LANGUAGE_MAPPING[conversation.conversation_language]:<10} {message_text:<50}\n"
+                response += f"{idx+1:<20} {LANGUAGE_MAPPING[conversation.conversation_language]:<10} {message_text[0:50 if len(message_text)>50 else len(message_text)]}...\n"
 
             response += "```"
 
