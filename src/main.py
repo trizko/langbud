@@ -145,12 +145,20 @@ async def list_conversation(interaction):
             # Add table rows
             for idx, conversation in enumerate(conversations):
                 latest_message = await get_last_message_by_conversation_id(connection, conversation.conversation_id)
+
                 message_text = ""
                 if not latest_message:
                      message_text = "No messages"
                 else:
                     message_text = latest_message.message_text
-                response += f"{idx+1:<20} {LANGUAGE_MAPPING[conversation.conversation_language]:<10} {message_text[0:50 if len(message_text)>50 else len(message_text)]}...\n"
+
+                index = 0
+                if conversation.conversation_id == user.active_conversation_id:
+                    index = f"{idx+1} (active)"
+                else:
+                    index = idx+1
+
+                response += f"{index:<20} {LANGUAGE_MAPPING[conversation.conversation_language]:<10} {message_text[0:50 if len(message_text)>50 else len(message_text)]}...\n"
 
             response += "```"
 
