@@ -76,3 +76,16 @@ async def delete_message(db_conn: asyncpg.Connection, message_id: int):
         return False
 
     return True
+
+
+async def get_last_message_by_conversation_id(
+    db_conn: asyncpg.Connection, conversation_id: int
+) -> Message:
+    message = await db_conn.fetchrow(
+        "SELECT * FROM messages WHERE conversation_id = $1 ORDER BY id DESC LIMIT 1",
+        conversation_id,
+    )
+    if not message:
+        return None
+
+    return Message.from_query(message)
