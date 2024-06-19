@@ -162,6 +162,38 @@ async def list_conversation(interaction):
 
 
 @tree.command(
+    name="select-conversation",
+    description="Selects a conversation to activate",
+)
+@app_commands.describe(conversation_id="The ID of the conversation to activate")
+async def select_conversation(interaction, conversation_id: int):
+    try:
+        await interaction.response.defer()
+        db_pool = await database.get_pool()
+        async with db_pool.acquire() as connection:
+            user = await get_user_by_discord_username(connection, interaction.user.name)
+            if not user:
+                user = await create_user(connection, interaction.user.name, "en")
+
+            conversations = await get_conversations_by_user_id(connection, user.user_id)
+            if not conversations:
+                await interaction.followup.send("You do not have any conversations. Create one with the `/new-conversation <language>` slash command.")
+                return
+
+            conversation = conversations[conversation_id - 1]
+
+            user = await update_user(connection, user.user_id, conversation.conversation_id)
+        await interaction.followup.send(
+            f"Conversation successfully activated with {LANGUAGE_MAPPING[conversation.conversation_language]} language"
+        )
+    except Exception as e:
+        await interaction.followup.send("An error occurred when activating the conversation")
+        logger.error(f"An error occurred when activating the conversation: {e}")
+        return
+
+
+
+@tree.command(
     name="explain", description="explains the chatbots last response in detail"
 )
 async def explain(interaction):
