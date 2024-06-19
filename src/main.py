@@ -96,8 +96,8 @@ languages = [
     name="new-conversation",
     description="Creates a new conversation with the chosen language",
 )
-@app_commands.choices(languages=languages)
-async def new_conversation(interaction, languages: app_commands.Choice[str]):
+@app_commands.choices(language=languages)
+async def new_conversation(interaction, language: app_commands.Choice[str]):
     try:
         await interaction.response.defer()
         db_pool = await database.get_pool()
@@ -106,7 +106,7 @@ async def new_conversation(interaction, languages: app_commands.Choice[str]):
             if not user:
                 user = await create_user(connection, interaction.user.name, "en")
 
-            conversation = await create_conversation(connection, user, languages.value)
+            conversation = await create_conversation(connection, user, language.value)
             user = await update_user(connection, user.user_id, conversation.conversation_id)
         await interaction.followup.send(
             f"Conversation successfully created with {LANGUAGE_MAPPING[conversation.conversation_language]} language"
