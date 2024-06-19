@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY,
     active_conversation_id INTEGER DEFAULT NULL,
     discord_username VARCHAR(255) NOT NULL UNIQUE,
     spoken_language VARCHAR(255),
@@ -25,7 +25,7 @@ FOR EACH ROW
 EXECUTE FUNCTION update_modified_at();
 
 CREATE TABLE conversations (
-    id SERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY,
     user_id INTEGER NOT NULL,
     conversation_language VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -35,7 +35,7 @@ CREATE TABLE conversations (
 CREATE INDEX idx_conversations_user_id ON conversations USING HASH (user_id);
 
 CREATE TABLE messages (
-    id SERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY,
     user_id INTEGER NOT NULL,
     conversation_id INTEGER NOT NULL,
     message_text TEXT NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE messages (
 );
 
 CREATE TABLE explanations (
-    id SERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY NOT NULL GENERATED ALWAYS AS IDENTITY,
     user_id INTEGER NOT NULL,
     message_id INTEGER NOT NULL,
     explanation_text TEXT NOT NULL,
