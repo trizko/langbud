@@ -28,6 +28,14 @@ def wait_for_pg_ready(host, port, user, password, db, timeout=60):
 @pytest.fixture(scope="session")
 def docker_pg():
     client = docker.from_env()
+
+    # Check if container already exists. if so, stop and remove it
+    existing_containers = client.containers.list(all=True, filters={"name": "test-postgres"})
+    for container in existing_containers:
+        if container.status == "running":
+            container.stop()
+        container.remove()
+
     container = client.containers.run(
         "postgres",
         name="test-postgres",
