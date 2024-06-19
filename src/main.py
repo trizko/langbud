@@ -66,7 +66,7 @@ async def chatbot_explain(db_conn, user):
     ]
     explain_messages.append({"role": "user", "content": latest_message.message_text})
     response = openai_client.chat.completions.create(
-        model="gpt-4o", messages=explain_messages
+        model="gpt-4o", messages=explain_messages, max_tokens=500
     )
     content = response.choices[0].message.content
     explanation = await create_explanation(db_conn, latest_message, content)
