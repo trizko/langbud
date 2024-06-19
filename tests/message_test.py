@@ -6,6 +6,7 @@ from models.message import (
     create_message,
     get_last_message_by_user,
     get_messages_by_conversation_id,
+    get_last_message_by_conversation_id,
     get_message,
     delete_message,
 )
@@ -97,3 +98,33 @@ async def test_delete_message(db_pool):
         await delete_message(connection, new_message.message_id)
         message = await get_message(connection, new_message.message_id)
         assert message is None
+
+
+@pytest.mark.asyncio
+async def test_get_last_message_by_conversation_id(db_pool):
+    async with db_pool.acquire() as connection:
+        new_user = await create_user(
+            connection, "test_get_last_message_by_conversation_id", "en"
+        )
+        conversation = await create_conversation(connection, new_user, "es")
+        user = await get_user(connection, new_user.user_id)
+
+        await create_message(
+            connection, user, True, "test_get_last_message_by_conversation_id_1"
+        )
+        await create_message(
+            connection, user, False, "test_get_last_message_by_conversation_id_2"
+        )
+        await create_message(
+            connection, user, True, "test_get_last_message_by_conversation_id_3"
+        )
+        await create_message(
+            connection, user, False, "test_get_last_message_by_conversation_id_4"
+        )
+
+        message = await get_last_message_by_conversation_id(connection, conversation.conversation_id)
+        assert message.message_id is not None
+        assert message.user_id == user.user_id
+        assert message.conversation_id == conversation.conversation_id
+        assert message.is_from_user is False
+        assert message.message_text == "test_get_last_message_by_conversation_id_4"
