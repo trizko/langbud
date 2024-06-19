@@ -93,11 +93,11 @@ languages = [
 
 
 @tree.command(
-    name="create-conversation",
+    name="new-conversation",
     description="Creates a new conversation with the chosen language",
 )
 @app_commands.choices(languages=languages)
-async def create_conversation(interaction, languages: app_commands.Choice[str]):
+async def new_conversation(interaction, languages: app_commands.Choice[str]):
     try:
         await interaction.response.defer()
         db_pool = await database.get_pool()
