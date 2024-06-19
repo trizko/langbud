@@ -137,7 +137,7 @@ async def list_conversation(interaction):
 
 
             # Prepare table header
-            response = "Your conversations are:\n"
+            response = "Your can select a conversation to activate with the `/select-converation <conversation_id>` slash command:\n"
             response += "```"
             response += f"{'Conversation ID':<20} {'Language':<10} {'Last Message':<50}\n"
             response += f"{'-' * 20} {'-' * 10} {'-' * 50}\n"
@@ -145,7 +145,12 @@ async def list_conversation(interaction):
             # Add table rows
             for idx, conversation in enumerate(conversations):
                 latest_message = await get_last_message_by_conversation_id(connection, conversation.conversation_id)
-                response += f"{idx+1:<20} {LANGUAGE_MAPPING[conversation.conversation_language]:<10} {latest_message.message_text:<50}\n"
+                message_text = ""
+                if not latest_message:
+                     message_text = "No messages"
+                else:
+                    message_text = latest_message.message_text
+                response += f"{idx+1:<20} {LANGUAGE_MAPPING[conversation.conversation_language]:<10} {message_text:<50}\n"
 
             response += "```"
 
