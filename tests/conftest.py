@@ -47,7 +47,7 @@ def docker_pg():
         ports={"5432/tcp": 5432},
         detach=True,
     )
-    time.sleep(5)  # Give some time for the database to initialize
+    wait_for_pg_ready(host="127.0.0.1", port=5432, user="user", password="password", db="testdb")
     yield
     container.stop()
     container.remove()
