@@ -74,20 +74,21 @@ discord_client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(discord_client)
 
 
+languages = [
+    app_commands.Choice(name="Spanish", value="es"),
+    app_commands.Choice(name="French", value="fr"),
+    app_commands.Choice(name="German", value="de"),
+    app_commands.Choice(name="Italian", value="it"),
+    app_commands.Choice(name="Brazilian Portuguese", value="pt-BR"),
+    app_commands.Choice(name="Turkish", value="tr"),
+]
+
+
 @tree.command(
     name="create-conversation",
     description="Creates a new conversation with the chosen language",
 )
-@app_commands.choices(
-    languages=[
-        app_commands.Choice(name="Spanish", value="es"),
-        app_commands.Choice(name="French", value="fr"),
-        app_commands.Choice(name="German", value="de"),
-        app_commands.Choice(name="Italian", value="it"),
-        app_commands.Choice(name="Brazilian Portuguese", value="pt-BR"),
-        app_commands.Choice(name="Turkish", value="tr"),
-    ]
-)
+@app_commands.choices(languages=languages)
 async def create_conversation(interaction, languages: app_commands.Choice[str]):
     try:
         await interaction.response.defer()
