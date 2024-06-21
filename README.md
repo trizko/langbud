@@ -1,4 +1,4 @@
-# langbud - a spanish teaching companion 
+# langbud - a language teaching companion
 
 ### Requirements
 You will need to install the following on your machine:
