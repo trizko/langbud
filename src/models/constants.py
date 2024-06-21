@@ -7,4 +7,5 @@ LANGUAGE_MAPPING = {
     "it": "Italian",
     "tr": "Turkish",
     "pt-BR": "Brazilian Portuguese",
+    "jp": "Japanese",
 }
