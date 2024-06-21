@@ -84,6 +84,7 @@ tree = app_commands.CommandTree(discord_client)
 
 languages = [
     app_commands.Choice(name="Spanish", value="es"),
+    app_commands.Choice(name="Mexican Spanish", value="es-MX"),
     app_commands.Choice(name="French", value="fr"),
     app_commands.Choice(name="German", value="de"),
     app_commands.Choice(name="Italian", value="it"),

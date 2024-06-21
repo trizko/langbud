@@ -1,6 +1,7 @@
 LANGUAGE_MAPPING = {
     "en": "English",
     "es": "Spanish",
+    "es-MX": "Mexican Spanish",
     "fr": "French",
     "de": "German",
     "it": "Italian",
