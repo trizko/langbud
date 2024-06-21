@@ -1,6 +1,7 @@
 import asyncpg
 
 from pydantic import BaseModel
+from typing import List
 
 from .user import User
 
@@ -52,11 +53,21 @@ async def get_last_message_by_user(db_conn: asyncpg.Connection, user: User) -> M
 
 
 async def get_messages_by_conversation_id(
-    db_conn: asyncpg.Connection, conversation_id: int
-) -> list[Message]:
+    db_conn: asyncpg.Connection, conversation_id: int, limit: int = 25
+) -> List[Message]:
     messages = await db_conn.fetch(
-        "SELECT * FROM messages WHERE conversation_id = $1",
+        """
+        WITH last_messages AS (
+            SELECT
+                *
+            FROM messages
+            WHERE conversation_id = $1
+            ORDER BY created_at DESC
+            LIMIT $2
+        ) SELECT * FROM last_messages ORDER BY id ASC
+        """,
         conversation_id,
+        limit,
     )
     return [Message.from_query(message) for message in messages]
 
