@@ -112,7 +112,7 @@ async def new_conversation(interaction, language: app_commands.Choice[str]):
             conversation = await create_conversation(connection, user, language.value)
             user = await update_user(connection, user.user_id, conversation.conversation_id)
         await interaction.followup.send(
-            f"Conversation successfully created with {LANGUAGE_MAPPING[conversation.conversation_language].name} language"
+            f"Great! Let's start speaking {LANGUAGE_MAPPING[conversation.conversation_language].name}. {LANGUAGE_MAPPING[conversation.conversation_language].greeting}!"
         )
     except Exception as e:
         await interaction.followup.send("An error occurred when creating the conversation")
@@ -199,7 +199,7 @@ async def select_conversation(interaction, conversation_id: int):
 
             user = await update_user(connection, user.user_id, conversation.conversation_id)
         await interaction.followup.send(
-            f"Conversation successfully activated with {LANGUAGE_MAPPING[conversation.conversation_language].name} language"
+            f"Great! Let's start speaking {LANGUAGE_MAPPING[conversation.conversation_language].name}. {LANGUAGE_MAPPING[conversation.conversation_language].greeting}!"
         )
     except Exception as e:
         await interaction.followup.send("An error occurred when activating the conversation")
