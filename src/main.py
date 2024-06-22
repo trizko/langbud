@@ -142,8 +142,8 @@ async def list_conversation(interaction):
             # Prepare table header
             response = "Your can select a conversation to activate with the `/select-converation <conversation_id>` slash command:\n"
             response += "```"
-            response += f"{'Conversation ID':<20} {'Language':<10} {'Last Message':<50}\n"
-            response += f"{'-' * 20} {'-' * 10} {'-' * 50}\n"
+            response += f"{'Conversation ID':<15} {'Language':<22} {'Last Message':<50}\n"
+            response += f"{'-' * 15} {'-' * 22} {'-' * 50}\n"
 
             # Add table rows
             for idx, conversation in enumerate(conversations):
@@ -161,7 +161,7 @@ async def list_conversation(interaction):
                 else:
                     index = idx+1
 
-                response += f"{index:<20} {LANGUAGE_MAPPING[conversation.conversation_language].name:<10} {message_text[0:50 if len(message_text)>50 else len(message_text)]}...\n"
+                response += f"{index:<15} {LANGUAGE_MAPPING[conversation.conversation_language].name:<22} {message_text[0:50 if len(message_text)>50 else len(message_text)]}...\n"
 
             response += "```"
 
