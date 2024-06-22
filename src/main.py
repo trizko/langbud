@@ -61,7 +61,7 @@ async def chatbot_explain(db_conn, user):
     explain_messages = [
         {
             "role": "system",
-            "content": f"You are a friendly {LANGUAGE_MAPPING[conversation.conversation_language]}-teaching chatbot. You take the users {LANGUAGE_MAPPING[conversation.conversation_language]} messages and explain them word for word in {LANGUAGE_MAPPING[user.spoken_language]}. Also, include ways you can respond to this message in {LANGUAGE_MAPPING[conversation.conversation_language]}.",
+            "content": f"You are a friendly {LANGUAGE_MAPPING[conversation.conversation_language].name}-teaching chatbot. You take the users {LANGUAGE_MAPPING[conversation.conversation_language].name} messages and explain them word for word in {LANGUAGE_MAPPING[user.spoken_language].name}. Also, include ways you can respond to this message in {LANGUAGE_MAPPING[conversation.conversation_language].name}.",
         },
     ]
     explain_messages.append({"role": "user", "content": latest_message.message_text})
@@ -112,7 +112,7 @@ async def new_conversation(interaction, language: app_commands.Choice[str]):
             conversation = await create_conversation(connection, user, language.value)
             user = await update_user(connection, user.user_id, conversation.conversation_id)
         await interaction.followup.send(
-            f"Conversation successfully created with {LANGUAGE_MAPPING[conversation.conversation_language]} language"
+            f"Conversation successfully created with {LANGUAGE_MAPPING[conversation.conversation_language].name} language"
         )
     except Exception as e:
         await interaction.followup.send("An error occurred when creating the conversation")
@@ -161,7 +161,7 @@ async def list_conversation(interaction):
                 else:
                     index = idx+1
 
-                response += f"{index:<20} {LANGUAGE_MAPPING[conversation.conversation_language]:<10} {message_text[0:50 if len(message_text)>50 else len(message_text)]}...\n"
+                response += f"{index:<20} {LANGUAGE_MAPPING[conversation.conversation_language].name:<10} {message_text[0:50 if len(message_text)>50 else len(message_text)]}...\n"
 
             response += "```"
 
@@ -199,7 +199,7 @@ async def select_conversation(interaction, conversation_id: int):
 
             user = await update_user(connection, user.user_id, conversation.conversation_id)
         await interaction.followup.send(
-            f"Conversation successfully activated with {LANGUAGE_MAPPING[conversation.conversation_language]} language"
+            f"Conversation successfully activated with {LANGUAGE_MAPPING[conversation.conversation_language].name} language"
         )
     except Exception as e:
         await interaction.followup.send("An error occurred when activating the conversation")
