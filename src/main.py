@@ -10,7 +10,6 @@ from discord import app_commands
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from openai import OpenAI
 from pydantic import BaseModel
 
 from models.constants import LANGUAGE_MAPPING
@@ -21,6 +20,7 @@ from models.user import get_user_by_discord_username, create_user, update_user
 from models.utils import format_messages_openai
 
 from db import Database
+from llm import LLM
 
 load_dotenv()
 
@@ -30,8 +30,8 @@ logger = logging.getLogger("uvicorn")
 # Setup database connection pooling object
 database = Database(os.getenv("PG_URI"))
 
-# Setup the OpenAI client
-openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Setup the LLM client
+llm = LLM(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 async def create_chatbot_response(db_conn, user, prompt):
@@ -41,8 +41,7 @@ async def create_chatbot_response(db_conn, user, prompt):
         conversation = await get_conversation(db_conn, user.active_conversation_id)
         raw_messages = await get_messages_by_conversation_id(db_conn, user.active_conversation_id)
         messages = await format_messages_openai(db_conn, user, raw_messages, conversation.conversation_language)
-        response = openai_client.chat.completions.create(model="gpt-4o", messages=messages)
-        content = response.choices[0].message.content
+        content = llm.complete(model="gpt-4o", messages=messages)
         await create_message(db_conn, user, is_from_user=False, message_text=content)
     except Exception as e:
         logger.error(f"An error occurred when creating chatbot response: {e}")
@@ -65,10 +64,7 @@ async def chatbot_explain(db_conn, user):
         },
     ]
     explain_messages.append({"role": "user", "content": latest_message.message_text})
-    response = openai_client.chat.completions.create(
-        model="gpt-4o", messages=explain_messages, max_tokens=500
-    )
-    content = response.choices[0].message.content
+    content = llm.complete(model="gpt-4o", messages=explain_messages, max_tokens=500)
     explanation = await create_explanation(db_conn, latest_message, content)
 
     return explanation.explanation_text
