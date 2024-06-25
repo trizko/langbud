@@ -10,6 +10,6 @@ class LLM:
     
 
     async def complete(self, messages: List[dict], model: str = "gpt-4o", max_tokens: int = None) -> str:
-        response = await openai_client.chat.completions.create(model=model, messages=messages, max_tokens=max_tokens)
+        response = await self.client.chat.completions.create(model=model, messages=messages, max_tokens=max_tokens)
         content = response.choices[0].message.content
         return content
