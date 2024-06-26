@@ -21,6 +21,7 @@ from models.utils import format_messages_openai
 
 from db import Database
 from llm import LLM
+from web.routes import setup_routes
 
 load_dotenv()
 
@@ -276,19 +277,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-
-
-class UserMessage(BaseModel):
-    prompt: str
-
-
-class Response(BaseModel):
-    message: str
-
-
-@app.post("/chat/")
-async def generate_text(message: UserMessage):
-    return Response(message=create_chatbot_response(message.prompt))
+app = setup_routes(app)
 
 
 if __name__ == "__main__":
