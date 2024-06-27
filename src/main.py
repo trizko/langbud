@@ -89,6 +89,7 @@ languages = [
     app_commands.Choice(name="Brazilian Portuguese", value="pt-BR"),
     app_commands.Choice(name="Turkish", value="tr"),
     app_commands.Choice(name="Japanese", value="jp"),
+    app_commands.Choice(name="Arabic", value="ar"),
 ]
 
 

@@ -15,4 +15,5 @@ LANGUAGE_MAPPING = {
     "tr": Language("tr", "Turkish", "Merhaba"),
     "pt-BR": Language("pt-BR", "Brazilian Portuguese", "Olá"),
     "jp": Language("jp", "Japanese", "こんにちは"),
+    "ar": Language("ar", "Arabic", "مرحبا"),
 }
