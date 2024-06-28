@@ -2,9 +2,11 @@ import asyncpg
 
 from typing import List
 
+from utils.constants import LANGUAGE_MAPPING
+from utils.prompts import system_prompt
+
 from .message import Message
 from .user import User
-from utils.constants import LANGUAGE_MAPPING
 
 
 async def format_messages_openai(db_conn: asyncpg.Connection, user: User, messages: List[Message], language: str) -> List[dict]:
@@ -13,7 +15,7 @@ async def format_messages_openai(db_conn: asyncpg.Connection, user: User, messag
 
     system_message = {
         "role": "system",
-        "content": f"You are a friendly {LANGUAGE_MAPPING[language].name}-speaking chatbot named Maya. Your task is to help the user learn {LANGUAGE_MAPPING[language].name}. You should continue the conversation in {LANGUAGE_MAPPING[language].name}, but if the user makes a mistake, correct them in {LANGUAGE_MAPPING[user.spoken_language].name}.",
+        "content": system_prompt(learning=language, fluent=user.spoken_language),
     }
     formatted_messages = [
         {
