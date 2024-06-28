@@ -12,7 +12,6 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from models.constants import LANGUAGE_MAPPING
 from models.conversation import create_conversation, get_conversation, get_conversations_by_user_id
 from models.explanation import create_explanation, get_explanation_by_message
 from models.message import get_last_message_by_user, create_message, get_messages_by_conversation_id, get_last_message_by_conversation_id
@@ -22,6 +21,7 @@ from models.utils import format_messages_openai
 from db import Database
 from llm import LLM
 from web.routes import setup_routes
+from utils.constants import LANGUAGE_MAPPING
 
 load_dotenv()
 

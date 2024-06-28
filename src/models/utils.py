@@ -4,7 +4,7 @@ from typing import List
 
 from .message import Message
 from .user import User
-from .constants import LANGUAGE_MAPPING
+from utils.constants import LANGUAGE_MAPPING
 
 
 async def format_messages_openai(db_conn: asyncpg.Connection, user: User, messages: List[Message], language: str) -> List[dict]:
