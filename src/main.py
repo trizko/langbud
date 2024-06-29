@@ -22,6 +22,7 @@ from db import Database
 from llm import LLM
 from web.routes import setup_routes
 from utils.constants import LANGUAGE_MAPPING
+from utils.prompts import explain_prompt
 
 load_dotenv()
 
@@ -61,7 +62,7 @@ async def chatbot_explain(db_conn, user):
     explain_messages = [
         {
             "role": "system",
-            "content": f"You are a friendly {LANGUAGE_MAPPING[conversation.conversation_language].name}-teaching chatbot. You take the users {LANGUAGE_MAPPING[conversation.conversation_language].name} messages and explain them word for word in {LANGUAGE_MAPPING[user.spoken_language].name}. Also, include ways you can respond to this message in {LANGUAGE_MAPPING[conversation.conversation_language].name}.",
+            "content": explain_prompt(learning=conversation.conversation_language, fluent=user.spoken_language),
         },
     ]
     explain_messages.append({"role": "user", "content": latest_message.message_text})
