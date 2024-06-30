@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from fastapi import APIRouter
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 
@@ -17,6 +18,11 @@ router = APIRouter()
 @router.post('/chat/')
 async def generate_text(message: UserMessage):
     return Response(message="200 OK")
+
+
+@router.get('/')
+async def index():
+    return FileResponse("src/web/frontend/index.html")
 
 
 def setup_routes(app):
