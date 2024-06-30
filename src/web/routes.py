@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from fastapi import APIRouter
+from fastapi.staticfiles import StaticFiles
 
 
 class UserMessage(BaseModel):
@@ -19,5 +20,6 @@ async def generate_text(message: UserMessage):
 
 
 def setup_routes(app):
+    app.mount("/static", StaticFiles(directory="src/web/frontend"), name="static")
     app.include_router(router)
     return app
