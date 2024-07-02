@@ -25,6 +25,11 @@ async def index():
     return FileResponse("src/web/frontend/index.html")
 
 
+@router.get('/login/')
+async def login():
+    return FileResponse("src/web/frontend/login.html")
+
+
 def setup_routes(app):
     app.mount("/static", StaticFiles(directory="src/web/frontend"), name="static")
     app.include_router(router)
