@@ -26,6 +26,9 @@ class LoginForm extends HTMLElement {
                 <input type="password" id="password" placeholder="Password" required>
                 <button type="submit">Login</button>
             </form>
+            <a href="/login-with-discord">
+                <button>Login with Discord</button>
+            </a>
         `;
     }
 
