@@ -6,6 +6,7 @@ class App extends HTMLElement {
 
     connectedCallback() {
         this.render();
+        this.addEventListeners();
     }
 
     render() {
@@ -19,6 +20,10 @@ class App extends HTMLElement {
                 <chat></chat>
             </main>
         `;
+    }
+
+    addEventListeners() {
+        // Add event listeners here
     }
 }
 
