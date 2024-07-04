@@ -29,6 +29,10 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           DISCORD_BOT_TOKEN_DEV: ${{ secrets.DISCORD_BOT_TOKEN_DEV }}
           DISCORD_BOT_TOKEN_PROD: ${{ secrets.DISCORD_BOT_TOKEN_PROD }}
+          DISCORD_CLIENT_ID_DEV: ${{ secrets.DISCORD_CLIENT_ID_DEV }}
+          DISCORD_CLIENT_ID_PROD: ${{ secrets.DISCORD_CLIENT_ID_PROD }}
+          DISCORD_CLIENT_SECRET_DEV: ${{ secrets.DISCORD_CLIENT_SECRET_DEV }}
+          DISCORD_CLIENT_SECRET_PROD: ${{ secrets.DISCORD_CLIENT_SECRET_PROD }}
           ENVIRONMENT: ${{ github.event.inputs.environment }}
         run: |
           # get connection details for postgres db
@@ -39,14 +43,20 @@ jobs:
           # get discord bot token
           if [ "$ENVIRONMENT" = "prod" ]; then
             DISCORD_BOT_TOKEN=$DISCORD_BOT_TOKEN_PROD
+            DISCORD_CLIENT_ID=$DISCORD_CLIENT_ID_PROD
+            DISCORD_CLIENT_SECRET=$DISCORD_CLIENT_SECRET_PROD
           else
             DISCORD_BOT_TOKEN=$DISCORD_BOT_TOKEN_DEV
+            DISCORD_CLIENT_ID=$DISCORD_CLIENT_ID_DEV
+            DISCORD_CLIENT_SECRET=$DISCORD_CLIENT_SECRET_DEV
           fi
 
           # create .env file with secrets
           cat <<EOF > .env
           OPENAI_API_KEY="$OPENAI_API_KEY"
           DISCORD_BOT_TOKEN="$DISCORD_BOT_TOKEN"
+          DISCORD_CLIENT_ID="$DISCORD_CLIENT_ID"
+          DISCORD_CLIENT_SECRET="$DISCORD_CLIENT_SECRET"
           PG_URI="$PG_URI"
           EOF
 
