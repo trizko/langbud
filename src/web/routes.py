@@ -37,11 +37,6 @@ async def index():
     return FileResponse("src/web/frontend/index.html")
 
 
-@router.get('/login/')
-async def login():
-    return FileResponse("src/web/frontend/login.html")
-
-
 @router.get("/login-with-discord")
 async def login():
     return RedirectResponse(url=f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_CLIENT_ID}&redirect_uri={DISCORD_REDIRECT_URI}&response_type=code&scope=identify+email")
