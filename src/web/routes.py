@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.security import OAuth2AuthorizationCodeBearer
 
 from dotenv import load_dotenv
 
@@ -42,7 +43,7 @@ async def login():
     return RedirectResponse(url=f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_CLIENT_ID}&redirect_uri={DISCORED_OAUTH_REDIRECT_URI}&response_type=code&scope=identify+email")
 
 
-@router.get("/callback")
+@router.get("/discord/oauth/callback")
 async def callback(request: Request):
     code = request.query_params.get("code")
     if not code:
