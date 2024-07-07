@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 DISCORD_CLIENT_ID = os.getenv("DISCORD_CLIENT_ID")
 DISCORD_CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET")
-DISCORD_REDIRECT_URI = os.getenv("DISCORD_REDIRECT_URI")
+DISCORED_OAUTH_REDIRECT_URI = os.getenv("DISCORED_OAUTH_REDIRECT_URI")
 
 
 class UserMessage(BaseModel):
@@ -39,7 +39,7 @@ async def index():
 
 @router.get("/login-with-discord")
 async def login():
-    return RedirectResponse(url=f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_CLIENT_ID}&redirect_uri={DISCORD_REDIRECT_URI}&response_type=code&scope=identify+email")
+    return RedirectResponse(url=f"https://discord.com/api/oauth2/authorize?client_id={DISCORD_CLIENT_ID}&redirect_uri={DISCORED_OAUTH_REDIRECT_URI}&response_type=code&scope=identify+email")
 
 
 @router.get("/callback")
@@ -53,7 +53,7 @@ async def callback(request: Request):
         "client_secret": DISCORD_CLIENT_SECRET,
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": DISCORD_REDIRECT_URI
+        "redirect_uri": DISCORED_OAUTH_REDIRECT_URI
     }
     headers = {
         "Content-Type": "application/x-www-form-urlencoded"
