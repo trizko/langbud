@@ -1,4 +1,4 @@
-class Header extends HTMLElement {
+export class Header extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
@@ -28,5 +28,3 @@ class Header extends HTMLElement {
         // Add event listeners here
     }
 }
-
-customElements.define('header-component', Header);

@@ -1,4 +1,4 @@
-class App extends HTMLElement {
+export class App extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
@@ -26,5 +26,3 @@ class App extends HTMLElement {
         // Add event listeners here
     }
 }
-
-customElements.define('app', App);
