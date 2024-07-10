@@ -1,9 +1,7 @@
-import { 
-    App,
-    HeaderComponent,
-    Sidebar,
-    Chat
-} from './js/app.js';
+import { App } from './js/app.js';
+import { HeaderComponent } from './js/header-component.js';
+import { Sidebar } from './js/sidebar.js';
+import { Chat } from './js/chat.js';
 
 customElements.define('app', App);
 customElements.define('header-component', HeaderComponent);
