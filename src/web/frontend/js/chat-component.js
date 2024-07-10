@@ -1,4 +1,4 @@
-export class Chat extends HTMLElement {
+export class ChatComponent extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
