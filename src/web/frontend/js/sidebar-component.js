@@ -1,4 +1,4 @@
-export class Sidebar extends HTMLElement {
+export class SidebarComponent extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
