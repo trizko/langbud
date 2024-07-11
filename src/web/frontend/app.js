@@ -1,6 +1,6 @@
-import { AppComponent } from './js/app-component.js';
-import { SidebarComponent } from './js/sidebar-component.js';
-import { ChatComponent } from './js/chat-component.js';
+import { AppComponent } from './js/app/app-component.js';
+import { SidebarComponent } from './js/app/sidebar-component.js';
+import { ChatComponent } from './js/app/chat-component.js';
 
 customElements.define('app-component', AppComponent);
 customElements.define('sidebar-component', SidebarComponent);
