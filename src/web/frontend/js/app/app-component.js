@@ -29,8 +29,8 @@ export class AppComponent extends HTMLElement {
             </style>
 
             <main>
-                <sidebar-component></sidebarcomponent>
-                <chat-component></chat>
+                <sidebar-component></sidebar-component>
+                <chat-component></chat-component>
             </main>
         `;
     }
