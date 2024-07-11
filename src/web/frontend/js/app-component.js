@@ -12,8 +12,26 @@ export class AppComponent extends HTMLElement {
     render() {
         this.shadowRoot.innerHTML = `
             <style>
-            /* Styles for the app */
+            header-component {
+                display: block;
+                border: 1px solid black;
+            }
+            main {
+                display: flex;
+            }
+            sidebar-component {
+                display: block;
+                border: 1px solid black;
+                width: 20%;
+                height: 100vh;
+            }
+            chat-component {
+                display: block;
+                border: 1px solid black;
+                width: 80%;
+            }
             </style>
+
             <header-component></header-component>
             <main>
                 <sidebar-component></sidebarcomponent>
