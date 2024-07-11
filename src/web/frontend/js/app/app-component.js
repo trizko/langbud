@@ -14,17 +14,26 @@ export class AppComponent extends HTMLElement {
             <style>
             main {
                 display: flex;
+                height: 100%;
             }
+
             sidebar-component {
-                display: block;
-                border: 1px solid black;
                 width: 20%;
-                height: 100vh;
-            }
-            chat-component {
                 display: block;
-                border: 1px solid black;
-                width: 80%;
+                background-color: #f4f4f4;
+                overflow-y: auto;
+                overflow-x: hidden;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+
+            chat-component {
+                flex: 1;
+                padding: 20px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                background-color: #fff;
+                box-sizing: border-box;
             }
             </style>
 
