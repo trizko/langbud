@@ -2,7 +2,6 @@ import asyncpg
 
 from typing import List
 
-from utils.constants import LANGUAGE_MAPPING
 from utils.prompts import system_prompt
 
 from .message import Message

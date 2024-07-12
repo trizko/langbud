@@ -10,7 +10,6 @@ from discord import app_commands
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from pydantic import BaseModel
 
 from models.conversation import create_conversation, get_conversation, get_conversations_by_user_id
 from models.explanation import create_explanation, get_explanation_by_message

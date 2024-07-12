@@ -1,12 +1,9 @@
 import os
 import httpx
 
-from pydantic import BaseModel
-
 from fastapi import APIRouter, Request, HTTPException
-from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.security import OAuth2AuthorizationCodeBearer
 
 from dotenv import load_dotenv
 
