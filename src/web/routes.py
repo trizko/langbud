@@ -14,14 +14,6 @@ DISCORD_CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET")
 DISCORED_OAUTH2_REDIRECT_URI = os.getenv("DISCORED_OAUTH2_REDIRECT_URI")
 
 
-class UserMessage(BaseModel):
-    prompt: str
-
-
-class Response(BaseModel):
-    message: str
-
-
 router = APIRouter()
 
 
