@@ -19,7 +19,7 @@ from models.utils import format_messages_openai
 
 from db import Database
 from llm import LLM
-from web.routes import setup_web_routes
+from web import setup_api_routes, setup_web_routes
 from utils.constants import LANGUAGE_MAPPING
 from utils.prompts import explain_prompt
 
@@ -278,6 +278,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app = setup_api_routes(app)
 app = setup_web_routes(app)
 
 
