@@ -74,7 +74,7 @@ async def callback(request: Request):
     return user_data
 
 
-def setup_routes(app):
+def setup_web_routes(app):
     app.mount("/static", StaticFiles(directory="src/web/frontend"), name="static")
     app.include_router(router)
     return app
