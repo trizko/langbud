@@ -34,7 +34,7 @@ async def index():
 
 
 @router.get('/chat/')
-async def index():
+async def chat():
     return FileResponse("src/web/frontend/app.html")
 
 
