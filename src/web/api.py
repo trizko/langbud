@@ -3,7 +3,6 @@ import httpx
 
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import RedirectResponse
-from fastapi.staticfiles import StaticFiles
 
 from dotenv import load_dotenv
 
