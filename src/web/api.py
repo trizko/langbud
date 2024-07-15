@@ -51,6 +51,12 @@ async def callback(request: Request):
 
     return user_data
 
+
+@router.get("/logout")
+async def logout():
+    return RedirectResponse(url="/")
+
+
 def setup_api_routes(app):
     app.include_router(router)
     return app
