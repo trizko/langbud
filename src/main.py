@@ -19,7 +19,7 @@ from models.utils import format_messages_openai
 
 from db import Database
 from llm import LLM
-from web import setup_api_routes, setup_discord_routes, setup_web_routes
+from routers import setup_api_routes, setup_discord_routes, setup_static_routes
 from utils.constants import LANGUAGE_MAPPING
 from utils.prompts import explain_prompt
 
@@ -280,7 +280,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app = setup_api_routes(app)
 app = setup_discord_routes(app)
-app = setup_web_routes(app)
+app = setup_static_routes(app)
 
 
 if __name__ == "__main__":
