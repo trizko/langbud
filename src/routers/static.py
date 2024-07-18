@@ -27,7 +27,7 @@ async def chat():
     return FileResponse("src/web/frontend/app.html")
 
 
-def setup_web_routes(app):
-    app.mount("/static", StaticFiles(directory="src/web/frontend"), name="static")
+def setup_static_routes(app):
+    app.mount("/static", StaticFiles(directory="src/frontend"), name="static")
     app.include_router(router)
     return app
