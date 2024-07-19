@@ -14,6 +14,7 @@ DISCORED_OAUTH2_REDIRECT_URI = os.getenv("DISCORED_OAUTH2_REDIRECT_URI")
 
 
 router = APIRouter()
+router.mount("/static", StaticFiles(directory="src/frontend"), name="static")
 
 
 @router.get('/')
@@ -24,9 +25,3 @@ async def index():
 @router.get('/chat/')
 async def chat():
     return FileResponse("src/web/frontend/app.html")
-
-
-def setup_static_routes(app):
-    app.mount("/static", StaticFiles(directory="src/frontend"), name="static")
-    app.include_router(router)
-    return app

@@ -50,8 +50,3 @@ async def callback(request: Request):
         user_data = user_response.json()
 
     return user_data
-
-
-def setup_discord_routes(app):
-    app.include_router(router)
-    return app
