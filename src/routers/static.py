@@ -1,8 +1,7 @@
 import os
-import httpx
 
-from fastapi import APIRouter, Request, HTTPException
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi import APIRouter
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from dotenv import load_dotenv

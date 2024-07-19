@@ -1,10 +1,8 @@
-import os
-import httpx
 
 from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
 
-from models.conversation import Conversation, create_conversation, get_conversation, get_conversations_by_user_id
+from models.conversation import create_conversation, get_conversations_by_user_id
 
 
 router = APIRouter(prefix="/api")
