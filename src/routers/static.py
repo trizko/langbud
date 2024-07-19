@@ -11,9 +11,9 @@ router.mount("/static", StaticFiles(directory="src/frontend"), name="static")
 
 @router.get('/')
 async def index():
-    return FileResponse("src/web/frontend/index.html")
+    return FileResponse("src/frontend/index.html")
 
 
 @router.get('/chat/')
 async def chat():
-    return FileResponse("src/web/frontend/app.html")
+    return FileResponse("src/frontend/app.html")
