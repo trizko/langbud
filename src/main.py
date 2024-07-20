@@ -266,6 +266,7 @@ async def lifespan(app: FastAPI):
     task = asyncio.create_task(discord_client.start(os.getenv("DISCORD_BOT_TOKEN")))
     # Connect to the database
     await database.connect()
+    app.state.db = database
     yield
     # Close the database connection
     await database.disconnect()
