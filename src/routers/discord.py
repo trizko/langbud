@@ -49,4 +49,7 @@ async def callback(request: Request):
         user_response = await client.get("https://discord.com/api/users/@me", headers={"Authorization": f"Bearer {access_token}"})
         user_data = user_response.json()
 
+    request.session['user'] = user_data
+    request.session['access_token'] = access_token
+
     return RedirectResponse(url="/chat/")
