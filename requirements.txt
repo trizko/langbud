@@ -3,6 +3,7 @@ dbmt @ git+https://github.com/trizko/dbmt
 discord.py
 docker
 fastapi
+itsdangerous
 openai
 psycopg2-binary
 pytest
@@ -10,4 +11,5 @@ pytest-asyncio
 python-dotenv
 redis-py-cluster
 ruff
+starlette
 uvicorn[standard]
