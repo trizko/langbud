@@ -10,6 +10,7 @@ from discord import app_commands
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from starlette.middleware.sessions import SessionMiddleware
 
 from models.conversation import create_conversation, get_conversation, get_conversations_by_user_id
 from models.explanation import create_explanation, get_explanation_by_message
@@ -279,6 +280,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY"))
 app.include_router(router)
 
 
