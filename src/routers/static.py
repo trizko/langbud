@@ -4,7 +4,6 @@ from fastapi.staticfiles import StaticFiles
 
 
 router = APIRouter()
-router.mount("/static", StaticFiles(directory="src/frontend"), name="static")
 
 
 @router.get('/')
