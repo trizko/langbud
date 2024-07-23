@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
 
 
 router = APIRouter()
