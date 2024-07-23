@@ -14,7 +14,11 @@ async def conversation():
 
 
 @router.get("/conversations")
-async def conversations(pool = Depends(get_db_pool)):
+async def conversations(request: Request, pool = Depends(get_db_pool)):
+    user_session = request.session.get("user")
+    if not user_session:
+        return RedirectResponse(url="/")
+
     async with pool.acquire() as connection:
         conversations = await get_conversations_by_user_id(connection, 1)
         return conversations
