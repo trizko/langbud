@@ -2,6 +2,7 @@ export class SidebarComponent extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        this.conversations = [];
     }
 
     connectedCallback() {
