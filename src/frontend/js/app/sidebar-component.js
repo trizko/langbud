@@ -6,6 +6,7 @@ export class SidebarComponent extends HTMLElement {
     }
 
     connectedCallback() {
+        this.fetchConversations();
         this.render();
         this.addEventListeners();
     }
@@ -27,6 +28,26 @@ export class SidebarComponent extends HTMLElement {
                 <ul id="conversationList"></ul>
             </div>
         `;
+    }
+
+    async fetchConversations() {
+        try {
+            const response = await fetch('/api/conversations');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            this.conversations = await response.json();
+            this.updateConversationList();
+        } catch (error) {
+            console.error('Error fetching conversations:', error);
+        }
+    }
+
+    updateConversationList() {
+        const ul = this.shadowRoot.getElementById('conversationList');
+        ul.innerHTML = this.conversations.map(conv => `
+            <li>${conv.conversation_language}</li>
+        `).join('');
     }
 
     addEventListeners() {
