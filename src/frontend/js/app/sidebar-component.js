@@ -1,14 +1,14 @@
+import { conversationState } from "../state/conversation-state.js";
+
 export class SidebarComponent extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
-        this.conversations = [];
     }
 
     connectedCallback() {
-        this.fetchConversations();
-        this.render();
         this.addEventListeners();
+        this.render();
     }
 
     render() {
@@ -30,27 +30,14 @@ export class SidebarComponent extends HTMLElement {
         `;
     }
 
-    async fetchConversations() {
-        try {
-            const response = await fetch('/api/conversations');
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            this.conversations = await response.json();
-            this.updateConversationList();
-        } catch (error) {
-            console.error('Error fetching conversations:', error);
-        }
-    }
-
     updateConversationList() {
         const ul = this.shadowRoot.getElementById('conversationList');
-        ul.innerHTML = this.conversations.map(conv => `
+        ul.innerHTML = conversationState.conversations.map(conv => `
             <li>${conv.conversation_language}</li>
         `).join('');
     }
 
     addEventListeners() {
-        // Add event listeners here
+        conversationState.subscribe(this.updateConversationList.bind(this));
     }
 }
