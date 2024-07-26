@@ -7,8 +7,9 @@ export class SidebarComponent extends HTMLElement {
     }
 
     connectedCallback() {
-        this.addEventListeners();
+        conversationState.subscribe(this.updateConversationList.bind(this));
         this.render();
+        this.addEventListeners();
     }
 
     render() {
@@ -22,12 +23,31 @@ export class SidebarComponent extends HTMLElement {
                     padding: 10px;
                     border-bottom: 1px solid #ccc;
                 }
+                #addConversationBtn {
+                    display: block;
+                    width: 100%;
+                    padding: 10px;
+                    background-color: #4CAF50;
+                    color: white;
+                    border: none;
+                    cursor: pointer;
+                    margin-top: 10px;
+                }
+                #addConversationBtn:hover {
+                    background-color: #45a049;
+                }
             </style>
             <div>
                 <h2>Conversations</h2>
                 <ul id="conversationList"></ul>
+                <button id="addConversationBtn">+ New Conversation</button>
             </div>
         `;
+    }
+
+    addEventListeners() {
+        const addButton = this.shadowRoot.getElementById('addConversationBtn');
+        addButton.addEventListener('click', () => this.addConversation());
     }
 
     updateConversationList() {
@@ -37,7 +57,11 @@ export class SidebarComponent extends HTMLElement {
         `).join('');
     }
 
-    addEventListeners() {
-        conversationState.subscribe(this.updateConversationList.bind(this));
+    addConversation() {
+        conversationState.add({
+            conversation_id: 99,
+            user_id: 1,
+            conversation_language: 'new',
+        });
     }
 }
