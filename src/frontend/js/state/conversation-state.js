@@ -1,9 +1,15 @@
 export const conversationState = {
     conversations: [],
     subscribers: [],
-  
+    activeConversationId: 0,
+
     get() {
-      return fetch('/api/conversations')
+      return fetch('/api/user')
+        .then(response => response.json())
+        .then(data => {
+          this.activeConversationId = data.active_conversation_id;
+          return fetch('/api/conversations');
+        })
         .then(response => response.json())
         .then(data => {
           this.conversations = data;
