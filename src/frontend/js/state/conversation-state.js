@@ -21,6 +21,11 @@ export const conversationState = {
       this.conversations.push(conversation);
       this.notify();
     },
+
+    setActiveConversation(conversationId) {
+      this.activeConversationId = conversationId;
+      this.notify();
+    },
   
     subscribe(callback) {
       this.subscribers.push(callback);
