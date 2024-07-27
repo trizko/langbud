@@ -72,6 +72,10 @@ export class SidebarComponent extends HTMLElement {
                 </button>
             </li>
         `).join('');
+
+        ul.querySelectorAll('.conversation-item').forEach(item => {
+            item.addEventListener('click', (e) => conversationState.setActiveConversation(Number(e.target.dataset.id)));
+        });
     }
 
     addConversation() {
