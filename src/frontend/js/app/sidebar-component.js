@@ -19,9 +19,22 @@ export class SidebarComponent extends HTMLElement {
                     list-style-type: none;
                     padding: 0;
                 }
-                li {
+                .conversation-item {
+                    display: block;
+                    width: 100%;
                     padding: 10px;
+                    text-align: left;
+                    background-color: white;
+                    border: none;
                     border-bottom: 1px solid #ccc;
+                    cursor: pointer;
+                }
+                .conversation-item:hover {
+                    background-color: #f0f0f0;
+                }
+                .conversation-item.selected {
+                    background-color: #e0e0e0;
+                    font-weight: bold;
                 }
                 #addConversationBtn {
                     display: block;
@@ -53,7 +66,11 @@ export class SidebarComponent extends HTMLElement {
     updateConversationList() {
         const ul = this.shadowRoot.getElementById('conversationList');
         ul.innerHTML = conversationState.conversations.map(conv => `
-            <li>${conv.conversation_language}</li>
+            <li>
+                <button class="conversation-item ${conv.conversation_id === conversationState.activeConversationId ? 'selected' : ''}" data-id="${conv.conversation_id}">
+                    ${conv.conversation_language}
+                </button>
+            </li>
         `).join('');
     }
 
