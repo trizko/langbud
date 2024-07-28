@@ -1,3 +1,4 @@
+import { LANGUAGE_MAPPING } from "../state/constants.js";
 import { conversationState } from "../state/conversation-state.js";
 
 export class SidebarComponent extends HTMLElement {
@@ -68,7 +69,7 @@ export class SidebarComponent extends HTMLElement {
         ul.innerHTML = conversationState.conversations.map(conv => `
             <li>
                 <button class="conversation-item ${conv.conversation_id === conversationState.activeConversationId ? 'selected' : ''}" data-id="${conv.conversation_id}">
-                    ${conv.conversation_language}
+                    ${LANGUAGE_MAPPING[conv.conversation_language]}
                 </button>
             </li>
         `).join('');
