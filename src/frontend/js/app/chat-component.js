@@ -2,6 +2,12 @@ export class ChatComponent extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        this.messages = [
+            { text: 'Hello!', type: 'received' },
+            { text: 'Hi there!', type: 'sent' },
+            { text: 'How are you?', type: 'received' },
+            { text: 'I\'m fine, thank you!', type: 'sent' },
+        ];
     }
 
     connectedCallback() {
