@@ -73,14 +73,19 @@ export class ChatComponent extends HTMLElement {
             </form>
         </div>
         `;
+        this.updateChat();
     }
 
     addEventListeners() {
         const form = this.shadowRoot.querySelector('form');
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            const message = this.shadowRoot.getElementById('message').value;
-            console.log('Sending message:', message);
+            const messageInput = this.shadowRoot.getElementById('message');
+            const message = messageInput.value.trim();
+            if (message) {
+                this.addMessage(message, 'sent');
+                messageInput.value = '';
+            }
         });
     }
 
