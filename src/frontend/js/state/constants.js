@@ -10,4 +10,5 @@ export const LANGUAGE_MAPPING = {
     "pt-BR": "Brazilian Portuguese",
     "jp":  "Japanese",
     "ar":  "Arabic",
+    "new": "New"
 }
