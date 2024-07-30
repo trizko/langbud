@@ -83,4 +83,19 @@ export class ChatComponent extends HTMLElement {
             console.log('Sending message:', message);
         });
     }
+
+    addMessage(text, type) {
+        this.messages.push({ text, type });
+        this.updateChat();
+    }
+
+    updateChat() {
+        const chat = this.shadowRoot.getElementById('chat');
+        chat.innerHTML = this.messages.map(msg => `
+            <div class="message ${msg.type}">
+                ${msg.text}
+            </div>
+        `).join('');
+        chat.scrollTop = chat.scrollHeight;
+    }
 }
