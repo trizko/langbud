@@ -4,6 +4,7 @@ from fastapi.responses import RedirectResponse
 from dependencies import get_db_pool
 from models.user import get_user_by_discord_username
 from models.conversation import create_conversation, get_conversations_by_user_id
+from models.message import get_messages_by_conversation_id
 
 
 router = APIRouter(prefix="/api")
@@ -30,6 +31,18 @@ async def conversations(request: Request, pool = Depends(get_db_pool)):
         user = await get_user_by_discord_username(connection, user_session["username"])
         conversations = await get_conversations_by_user_id(connection, user.user_id)
         return conversations
+
+
+@router.get("/messages")
+async def messages(request: Request, pool = Depends(get_db_pool)):
+    user_session = request.session.get("user")
+    if not user_session:
+        return RedirectResponse(url="/")
+
+    async with pool.acquire() as connection:
+        user = await get_user_by_discord_username(connection, user_session["username"])
+        messages = await get_messages_by_conversation_id(connection, user.active_conversation_id)
+        return messages
 
 
 @router.get("/logout")
