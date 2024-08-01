@@ -58,6 +58,12 @@ async def update_user(
     user_id: int,
     active_conversation_id: int,
 ) -> User:
+    conversations = await db_conn.fetch(
+        "SELECT * FROM conversations WHERE user_id = $1", user_id
+    )
+    if active_conversation_id not in [conversation.get("id") for conversation in conversations]:
+        return None
+
     user = await db_conn.fetchrow(
         "UPDATE users SET active_conversation_id = $1 WHERE id = $2 RETURNING *",
         active_conversation_id,
