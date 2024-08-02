@@ -23,8 +23,20 @@ export const conversationState = {
     },
 
     setActiveConversation(conversationId) {
-      this.activeConversationId = conversationId;
-      this.notify();
+      return fetch('/api/user', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          active_conversation_id: conversationId
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        this.activeConversationId = data.active_conversation_id;
+        this.notify();
+      });
     },
   
     subscribe(callback) {
