@@ -21,7 +21,7 @@ async def conversation(request: Request, pool = Depends(get_db_pool)):
         return user
 
 
-@router.post("/user")
+@router.put("/user")
 async def update_active_conversation(request: Request, pool = Depends(get_db_pool)):
     user_session = request.session.get("user")
     if not user_session:
