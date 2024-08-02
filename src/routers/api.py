@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse
 
 from dependencies import get_db_pool
 from models.user import get_user_by_discord_username, update_user
-from models.conversation import create_conversation, get_conversations_by_user_id
+from models.conversation import get_conversations_by_user_id
 from models.message import get_messages_by_conversation_id
 
 
