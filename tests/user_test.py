@@ -54,7 +54,7 @@ async def test_update_user(db_pool):
         new_user = await create_user(connection, "test_update_user", "en")
         assert new_user.active_conversation_id is None
         converation = await create_conversation(connection, new_user, "es-MX")
-        other_conversation = await create_conversation(connection, new_user, "fr")
+        await create_conversation(connection, new_user, "fr")
 
         await update_user(connection, new_user.user_id, converation.conversation_id)
         user = await get_user(connection, new_user.user_id)
