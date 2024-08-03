@@ -1,7 +1,6 @@
 export const messageState = {
     messages: [],
     subscribers: [],
-    activemessageId: 0,
 
     get() {
       return fetch('/api/messages')
