@@ -11,7 +11,7 @@ router = APIRouter(prefix="/api")
 
 
 @router.get("/user")
-async def conversation(request: Request, pool = Depends(get_db_pool), user_session = Depends(get_user_session)):
+async def get_user(request: Request, pool = Depends(get_db_pool), user_session = Depends(get_user_session)):
     async with pool.acquire() as connection:
         user = await get_user_by_discord_username(connection, user_session["username"])
         return user
@@ -27,7 +27,7 @@ async def update_active_conversation(request: Request, pool = Depends(get_db_poo
 
 
 @router.get("/conversations")
-async def conversations(request: Request, pool = Depends(get_db_pool), user_session = Depends(get_user_session)):
+async def get_conversations(request: Request, pool = Depends(get_db_pool), user_session = Depends(get_user_session)):
     async with pool.acquire() as connection:
         user = await get_user_by_discord_username(connection, user_session["username"])
         conversations = await get_conversations_by_user_id(connection, user.user_id)
@@ -35,7 +35,7 @@ async def conversations(request: Request, pool = Depends(get_db_pool), user_sess
 
 
 @router.get("/messages")
-async def messages(request: Request, pool = Depends(get_db_pool), user_session = Depends(get_user_session)):
+async def get_messages(request: Request, pool = Depends(get_db_pool), user_session = Depends(get_user_session)):
     async with pool.acquire() as connection:
         user = await get_user_by_discord_username(connection, user_session["username"])
         messages = await get_messages_by_conversation_id(connection, user.active_conversation_id)
