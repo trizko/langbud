@@ -75,10 +75,10 @@ export class ChatComponent extends HTMLElement {
         this.fetchMessages();
     }
 
-    fetchMessages() {
-        fetch('/api/messages')
-            .then(response => response.json())
-            .then(data => store.dispatch(fetchMessagesSuccess(data)));
+    async fetchMessages() {
+        let response = await fetch('/api/messages');
+        let data = await response.json();
+        store.dispatch(fetchMessagesSuccess(data));
     }
 
     render() {

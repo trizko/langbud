@@ -6,7 +6,6 @@ export class SidebarComponent extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
-        this.unsubscribe = null;
         this.shadowRoot.innerHTML = `
             <style>
                 ul {
@@ -61,12 +60,10 @@ export class SidebarComponent extends HTMLElement {
         this.unsubscribe();
     }
 
-    fetchConversations() {
-        fetch('/api/user')
-            .then(response => response.json())
-            .then(data => fetch('/api/conversations'))
-            .then(response => response.json())
-            .then(data => store.dispatch(fetchConversationsSuccess(data)));
+    async fetchConversations() {
+        let response = await fetch('/api/conversations');
+        let data = await response.json();
+        store.dispatch(fetchConversationsSuccess(data));
     }
 
     render() {
