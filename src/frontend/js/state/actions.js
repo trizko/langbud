@@ -5,6 +5,8 @@ import {
     ADD_CONVERSATION_REQUEST,
     ADD_CONVERSATION_SUCCESS,
     ADD_CONVERSATION_FAILURE,
+    FETCH_MESSAGES_SUCCESS,
+    FETCH_MESSAGES_FAILURE,
     ADD_MESSAGE_REQUEST,
     ADD_MESSAGE_SUCCESS,
     ADD_MESSAGE_FAILURE,
@@ -37,6 +39,16 @@ export const addConversationSuccess = (conversation) => ({
 
 export const addConversationFailure = (error) => ({
     type: ADD_CONVERSATION_FAILURE,
+    error
+});
+
+export const fetchMessagesSuccess = (messages) => ({
+    type: FETCH_MESSAGES_SUCCESS,
+    messages
+});
+
+export const fetchMessagesFailure = (error) => ({
+    type: FETCH_MESSAGES_FAILURE,
     error
 });
 

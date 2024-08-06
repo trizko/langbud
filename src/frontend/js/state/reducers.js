@@ -5,6 +5,8 @@ import {
     ADD_CONVERSATION_REQUEST,
     ADD_CONVERSATION_SUCCESS,
     ADD_CONVERSATION_FAILURE,
+    FETCH_MESSAGES_SUCCESS,
+    FETCH_MESSAGES_FAILURE,
     ADD_MESSAGE_REQUEST,
     ADD_MESSAGE_SUCCESS,
     ADD_MESSAGE_FAILURE,
@@ -42,6 +44,16 @@ const reducer = (state = initialState, action) => {
                 conversations: state.conversations.concat(action.conversation),
             };
         case ADD_CONVERSATION_FAILURE:
+            return {
+                ...state,
+                error: action.error,
+            };
+        case FETCH_MESSAGES_SUCCESS:
+            return {
+                ...state,
+                messages: action.messages,
+            };
+        case FETCH_MESSAGES_FAILURE:
             return {
                 ...state,
                 error: action.error,
