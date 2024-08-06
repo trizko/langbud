@@ -1,21 +1,10 @@
+import { fetchMessagesSuccess } from '../state/actions.js';
+import { store } from '../state/store.js';
+
 export class ChatComponent extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
-        this.messages = [
-            { text: 'Hello!', type: 'received' },
-            { text: 'Hi there!', type: 'sent' },
-            { text: 'How are you?', type: 'received' },
-            { text: 'I\'m fine, thank you!', type: 'sent' },
-        ];
-    }
-
-    connectedCallback() {
-        this.render();
-        this.addEventListeners();
-    }
-
-    render() {
         this.shadowRoot.innerHTML = `
         <style>
             .chat-container {
@@ -79,7 +68,31 @@ export class ChatComponent extends HTMLElement {
             </form>
         </div>
         `;
-        this.updateChat();
+    }
+
+    connectedCallback() {
+        this.unsubscribe = store.subscribe(() => this.render());
+        this.fetchMessages();
+    }
+
+    fetchMessages() {
+        fetch('/api/messages')
+            .then(response => response.json())
+            .then(data => store.dispatch(fetchMessagesSuccess(data)));
+    }
+
+    render() {
+        const messages = store.getState().messages;
+        const chat = this.shadowRoot.getElementById('chat');
+        chat.innerHTML = messages.map(msg => {
+            const msg_type = msg.is_from_user ? 'sent' : 'received';
+            return `<div class="message ${msg_type}">
+                ${msg.message_text}
+            </div>`;
+        }).join('');
+        chat.scrollTop = chat.scrollHeight;
+
+        this.addEventListeners();
     }
 
     addEventListeners() {
@@ -88,25 +101,7 @@ export class ChatComponent extends HTMLElement {
             e.preventDefault();
             const messageInput = this.shadowRoot.getElementById('message');
             const message = messageInput.value.trim();
-            if (message) {
-                this.addMessage(message, 'sent');
-                messageInput.value = '';
-            }
+            console.log("Sending message:", message);
         });
-    }
-
-    addMessage(text, type) {
-        this.messages.push({ text, type });
-        this.updateChat();
-    }
-
-    updateChat() {
-        const chat = this.shadowRoot.getElementById('chat');
-        chat.innerHTML = this.messages.map(msg => `
-            <div class="message ${msg.type}">
-                ${msg.text}
-            </div>
-        `).join('');
-        chat.scrollTop = chat.scrollHeight;
     }
 }
