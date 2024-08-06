@@ -1,4 +1,4 @@
-import Store from './srs';
-import reducer from './reducers';
+import Store from './srs.js';
+import reducer from './reducers.js';
 
-export const store = Store(reducer);
+export const store = new Store(reducer);

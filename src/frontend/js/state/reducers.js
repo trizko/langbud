@@ -8,7 +8,7 @@ import {
     ADD_MESSAGE_REQUEST,
     ADD_MESSAGE_SUCCESS,
     ADD_MESSAGE_FAILURE,
-} from './actionTypes';
+} from './actionTypes.js';
 
 const initialState = {
     conversations: [],

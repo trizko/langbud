@@ -1,4 +1,4 @@
-export class Store {
+export default class Store {
   constructor(reducer) {
     this.reducer = reducer;
     this.state = this.reducer(undefined, {});
