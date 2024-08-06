@@ -1,19 +1,12 @@
 import { LANGUAGE_MAPPING } from "../state/constants.js";
-import { conversationState } from "../state/conversation-state.js";
+import { fetchConversationsSuccess } from "../state/actions.js";
+import { store } from "../state/store.js";
 
 export class SidebarComponent extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
-    }
-
-    connectedCallback() {
-        conversationState.subscribe(this.updateConversationList.bind(this));
-        this.render();
-        this.addEventListeners();
-    }
-
-    render() {
+        this.unsubscribe = null;
         this.shadowRoot.innerHTML = `
             <style>
                 ul {
@@ -59,31 +52,43 @@ export class SidebarComponent extends HTMLElement {
         `;
     }
 
-    addEventListeners() {
-        const addButton = this.shadowRoot.getElementById('addConversationBtn');
-        addButton.addEventListener('click', () => this.addConversation());
+    connectedCallback() {
+        this.unsubscribe = store.subscribe(() => this.render());
+        this.fetchConversations();
     }
 
-    updateConversationList() {
+    disconnectedCallback() {
+        this.unsubscribe();
+    }
+
+    fetchConversations() {
+        fetch('/api/user')
+            .then(response => response.json())
+            .then(data => fetch('/api/conversations'))
+            .then(response => response.json())
+            .then(data => store.dispatch(fetchConversationsSuccess(data)));
+    }
+
+    render() {
+        const conversations = store.getState().conversations;
         const ul = this.shadowRoot.getElementById('conversationList');
-        ul.innerHTML = conversationState.conversations.map(conv => `
+        ul.innerHTML = conversations.map(conv => `
             <li>
-                <button class="conversation-item ${conv.conversation_id === conversationState.activeConversationId ? 'selected' : ''}" data-id="${conv.conversation_id}">
+                <button class="conversation-item ${conv.conversation_id === conversations.activeConversationId ? 'selected' : ''}" data-id="${conv.conversation_id}">
                     ${LANGUAGE_MAPPING[conv.conversation_language]}
                 </button>
             </li>
         `).join('');
 
         ul.querySelectorAll('.conversation-item').forEach(item => {
-            item.addEventListener('click', (e) => conversationState.setActiveConversation(Number(e.target.dataset.id)));
+            item.addEventListener('click', (e) => store.dispatch(setActiveConversation(Number(e.target.dataset.id))));
         });
+
+        this.addEventListeners();
     }
 
-    addConversation() {
-        conversationState.add({
-            conversation_id: 99,
-            user_id: 1,
-            conversation_language: 'new',
-        });
+    addEventListeners() {
+        const addButton = this.shadowRoot.getElementById('addConversationBtn');
+        addButton.addEventListener('click', () => {});
     }
 }
