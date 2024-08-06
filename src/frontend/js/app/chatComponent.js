@@ -8,7 +8,6 @@ export class ChatComponent extends HTMLElement {
         this.shadowRoot.innerHTML = `
         <style>
             .chat-container {
-                width: 50%;
                 margin: 0 auto;
                 font-family: Arial, sans-serif;
             }
@@ -18,7 +17,6 @@ export class ChatComponent extends HTMLElement {
                 background-color: #f0f0f0;
                 border-radius: 10px;
                 padding: 10px;
-                max-height: 400px;
                 overflow-y: auto;
             }
             .message {
