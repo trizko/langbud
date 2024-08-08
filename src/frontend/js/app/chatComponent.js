@@ -75,6 +75,7 @@ export class ChatComponent extends HTMLElement {
     connectedCallback() {
         this.unsubscribe = store.subscribe(() => this.render());
         this.fetchMessages();
+        this.addEventListeners();
     }
 
     async fetchMessages() {
@@ -93,8 +94,6 @@ export class ChatComponent extends HTMLElement {
             </div>`;
         }).join('');
         chat.scrollTop = chat.scrollHeight;
-
-        this.addEventListeners();
     }
 
     addEventListeners() {
