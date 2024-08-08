@@ -8,14 +8,16 @@ export class ChatComponent extends HTMLElement {
         this.shadowRoot.innerHTML = `
         <style>
             .chat-container {
-                margin: 0 auto;
-                font-family: Arial, sans-serif;
+                display: flex;
+                padding: 0px 10px;
+                flex-direction: column;
+                height: 100vh;
             }
             .chat {
+                flex-grow: 1;
                 display: flex;
                 flex-direction: column;
                 background-color: #f0f0f0;
-                border-radius: 10px;
                 padding: 10px;
                 overflow-y: auto;
             }
@@ -40,7 +42,9 @@ export class ChatComponent extends HTMLElement {
             }
             form {
                 display: flex;
-                margin-top: 10px;
+                padding: 10px;
+                background-color: #fff;
+                border-top: 1px solid #ccc;
             }
             input {
                 flex-grow: 1;

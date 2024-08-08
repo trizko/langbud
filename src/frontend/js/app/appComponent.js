@@ -29,9 +29,6 @@ export class AppComponent extends HTMLElement {
 
             chat-component {
                 flex: 1;
-                padding: 20px;
-                overflow-y: auto;
-                overflow-x: hidden;
                 background-color: #fff;
                 box-sizing: border-box;
             }
