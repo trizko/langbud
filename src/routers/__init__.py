@@ -9,6 +9,3 @@ router = APIRouter()
 router.include_router(api_router)
 router.include_router(discord_router)
 router.include_router(static_router)
-
-
-__all__ = ["router"]
