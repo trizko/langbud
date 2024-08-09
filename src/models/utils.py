@@ -8,7 +8,7 @@ from .message import Message
 from .user import User
 
 
-async def format_messages_openai(db_conn: asyncpg.Connection, user: User, messages: List[Message], language: str) -> List[dict]:
+async def format_messages_openai(user: User, messages: List[Message], language: str) -> List[dict]:
     if not messages:
         return []
 

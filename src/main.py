@@ -44,7 +44,7 @@ async def create_chatbot_response(db_conn, user, prompt):
         await create_message(db_conn, user, is_from_user=True, message_text=prompt)
         conversation = await get_conversation(db_conn, user.active_conversation_id)
         raw_messages = await get_messages_by_conversation_id(db_conn, user.active_conversation_id)
-        messages = await format_messages_openai(db_conn, user, raw_messages, conversation.conversation_language)
+        messages = await format_messages_openai(user, raw_messages, conversation.conversation_language)
         content = llm.complete(model="gpt-4o", messages=messages)
         await create_message(db_conn, user, is_from_user=False, message_text=content)
     except Exception as e:
