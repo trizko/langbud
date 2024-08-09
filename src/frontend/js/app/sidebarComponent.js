@@ -1,5 +1,5 @@
 import { LANGUAGE_MAPPING } from "../state/constants.js";
-import { fetchConversationsSuccess, setActiveConversation } from "../state/actions.js";
+import { fetchConversationsSuccess, setActiveConversationAndMessages } from "../state/actions.js";
 import { store } from "../state/store.js";
 
 export class SidebarComponent extends HTMLElement {
@@ -80,7 +80,7 @@ export class SidebarComponent extends HTMLElement {
 
         ul.querySelectorAll('.conversation-item').forEach(item => {
             item.addEventListener('click', async (e) => {
-                let response = await fetch('/api/user/', {
+                let userResponse = await fetch('/api/user/', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -89,8 +89,10 @@ export class SidebarComponent extends HTMLElement {
                         active_conversation_id: Number(e.target.dataset.id),
                     }),
                 });
-                let user = await response.json();
-                store.dispatch(setActiveConversation(user.active_conversation_id))
+                let user = await userResponse.json();
+                let messagesResponse = await fetch('/api/messages');
+                let messages = await messagesResponse.json();
+                store.dispatch(setActiveConversationAndMessages(user.active_conversation_id, messages));
             });
         });
     }

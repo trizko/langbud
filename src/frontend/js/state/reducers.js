@@ -1,5 +1,5 @@
 import {
-    SET_ACTIVE_CONVERSATION,
+    SET_ACTIVE_CONVERSATION_AND_MESSAGES,
     FETCH_CONVERSATIONS_SUCCESS,
     FETCH_CONVERSATIONS_FAILURE,
     ADD_CONVERSATION_REQUEST,
@@ -21,10 +21,11 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case SET_ACTIVE_CONVERSATION:
+        case SET_ACTIVE_CONVERSATION_AND_MESSAGES:
             return {
                 ...state,
                 activeConversationId: action.conversationId,
+                messages: action.messages,
             };
         case FETCH_CONVERSATIONS_SUCCESS:
             return {

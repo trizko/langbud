@@ -1,5 +1,5 @@
 import {
-    SET_ACTIVE_CONVERSATION,
+    SET_ACTIVE_CONVERSATION_AND_MESSAGES,
     FETCH_CONVERSATIONS_SUCCESS,
     FETCH_CONVERSATIONS_FAILURE,
     ADD_CONVERSATION_REQUEST,
@@ -12,9 +12,10 @@ import {
     ADD_MESSAGE_FAILURE,
 } from './actionTypes.js';
 
-export const setActiveConversation = (conversationId) => ({
-    type: SET_ACTIVE_CONVERSATION,
-    conversationId
+export const setActiveConversationAndMessages = (conversationId, messages) => ({
+    type: SET_ACTIVE_CONVERSATION_AND_MESSAGES,
+    conversationId,
+    messages
 });
 
 export const fetchConversationsSuccess = (conversations) => ({
