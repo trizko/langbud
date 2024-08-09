@@ -54,6 +54,7 @@ export class SidebarComponent extends HTMLElement {
     connectedCallback() {
         this.unsubscribe = store.subscribe(() => this.render());
         this.fetchConversations();
+        this.addEventListeners();
     }
 
     disconnectedCallback() {
@@ -80,8 +81,6 @@ export class SidebarComponent extends HTMLElement {
         ul.querySelectorAll('.conversation-item').forEach(item => {
             item.addEventListener('click', (e) => store.dispatch(setActiveConversation(Number(e.target.dataset.id))));
         });
-
-        this.addEventListeners();
     }
 
     addEventListeners() {
