@@ -43,5 +43,7 @@ async def get_messages(request: Request, pool = Depends(get_db_pool), user_sessi
 
 
 @router.get("/logout")
-async def logout():
+async def logout(request: Request):
+    request.session.pop("user", None)
+    request.session.pop("access_token", None)
     return RedirectResponse(url="/")
