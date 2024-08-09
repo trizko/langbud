@@ -1,4 +1,4 @@
-import { fetchMessagesSuccess } from '../state/actions.js';
+import { fetchMessagesSuccess, addMessageSuccess } from '../state/actions.js';
 import { store } from '../state/store.js';
 
 export class ChatComponent extends HTMLElement {
@@ -84,6 +84,10 @@ export class ChatComponent extends HTMLElement {
         store.dispatch(fetchMessagesSuccess(data));
     }
 
+    sendMessage(message) {
+        store.dispatch(addMessageSuccess(message));
+    }
+
     render() {
         const messages = store.getState().messages;
         const chat = this.shadowRoot.getElementById('chat');
@@ -101,8 +105,12 @@ export class ChatComponent extends HTMLElement {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const messageInput = this.shadowRoot.getElementById('message');
-            const message = messageInput.value.trim();
-            console.log("Sending message:", message);
+            const messageTrimmed = messageInput.value.trim();
+            const message = {
+                message_text: messageTrimmed,
+                is_from_user: true
+            };
+            this.sendMessage(message);
         });
     }
 }
