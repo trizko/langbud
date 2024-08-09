@@ -20,6 +20,7 @@ from models.user import get_user_by_discord_username, create_user, update_user
 from models.utils import format_messages_openai
 
 from db import Database
+from exceptions import RequiresLoginError, handle_requires_login_error
 from llm import LLM
 from routers import router
 from utils.constants import LANGUAGE_MAPPING
@@ -282,6 +283,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY"))
+app.add_exception_handler(RequiresLoginError, handle_requires_login_error)
 app.include_router(router)
 app.mount("/static", StaticFiles(directory="src/frontend"), name="static")
 
