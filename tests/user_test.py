@@ -53,16 +53,16 @@ async def test_update_user(db_pool):
     async with db_pool.acquire() as connection:
         new_user = await create_user(connection, "test_update_user", "en")
         assert new_user.active_conversation_id is None
-        converation = await create_conversation(connection, new_user, "es-MX")
+        conversation = await create_conversation(connection, new_user, "es-MX")
         await create_conversation(connection, new_user, "fr")
 
-        await update_user(connection, new_user.user_id, converation.conversation_id)
+        await update_user(connection, new_user.user_id, conversation.conversation_id)
         user = await get_user(connection, new_user.user_id)
 
         assert user.user_id == new_user.user_id
         assert user.discord_username == "test_update_user"
         assert user.spoken_language == "en"
-        assert user.active_conversation_id == converation.conversation_id
+        assert user.active_conversation_id == conversation.conversation_id
 
 
 @pytest.mark.asyncio
