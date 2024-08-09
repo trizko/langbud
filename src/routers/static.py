@@ -1,15 +1,19 @@
-from fastapi import APIRouter
-from fastapi.responses import FileResponse
+from fastapi import APIRouter, Depends, Request
+from fastapi.responses import FileResponse, RedirectResponse
+
+from dependencies import get_user_session
 
 
 router = APIRouter()
 
 
 @router.get('/')
-async def index():
+async def index(request: Request, user_session = Depends(get_user_session)):
+    if user_session:
+        return RedirectResponse(url="/chat/")
     return FileResponse("src/frontend/index.html")
 
 
 @router.get('/chat/')
-async def chat():
+async def chat(_ = Depends(get_user_session)):
     return FileResponse("src/frontend/app.html")
