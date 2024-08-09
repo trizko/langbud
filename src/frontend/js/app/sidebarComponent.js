@@ -1,5 +1,5 @@
 import { LANGUAGE_MAPPING } from "../state/constants.js";
-import { fetchConversationsSuccess } from "../state/actions.js";
+import { fetchConversationsSuccess, setActiveConversation } from "../state/actions.js";
 import { store } from "../state/store.js";
 
 export class SidebarComponent extends HTMLElement {
@@ -68,18 +68,30 @@ export class SidebarComponent extends HTMLElement {
     }
 
     render() {
-        const conversations = store.getState().conversations;
+        const state = store.getState();
         const ul = this.shadowRoot.getElementById('conversationList');
-        ul.innerHTML = conversations.map(conv => `
+        ul.innerHTML = state.conversations.map(conv => `
             <li>
-                <button class="conversation-item ${conv.conversation_id === conversations.activeConversationId ? 'selected' : ''}" data-id="${conv.conversation_id}">
+                <button class="conversation-item ${conv.conversation_id === state.activeConversationId ? 'selected' : ''}" data-id="${conv.conversation_id}">
                     ${LANGUAGE_MAPPING[conv.conversation_language]}
                 </button>
             </li>
         `).join('');
 
         ul.querySelectorAll('.conversation-item').forEach(item => {
-            item.addEventListener('click', (e) => store.dispatch(setActiveConversation(Number(e.target.dataset.id))));
+            item.addEventListener('click', async (e) => {
+                let response = await fetch('/api/user/', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        active_conversation_id: Number(e.target.dataset.id),
+                    }),
+                });
+                let user = await response.json();
+                store.dispatch(setActiveConversation(user.active_conversation_id))
+            });
         });
     }
 
