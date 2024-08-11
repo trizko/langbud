@@ -8,7 +8,8 @@ router = APIRouter()
 
 
 @router.get('/')
-async def index(request: Request, user_session = Depends(get_user_session)):
+async def index(request: Request):
+    user_session = request.session.get("user")
     if user_session:
         return RedirectResponse(url="/chat/")
     return FileResponse("src/frontend/index.html")
