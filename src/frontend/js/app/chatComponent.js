@@ -84,8 +84,16 @@ export class ChatComponent extends HTMLElement {
         store.dispatch(fetchMessagesSuccess(data));
     }
 
-    sendMessage(message) {
-        store.dispatch(addMessageSuccess(message));
+    async sendMessage(message) {
+        let response = await fetch('/api/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(message)
+        });
+        let data = await response.json();
+        store.dispatch(addMessageSuccess(data));
     }
 
     render() {
