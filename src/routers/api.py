@@ -4,7 +4,7 @@ from fastapi.responses import RedirectResponse
 from dependencies import get_db_pool, get_user_session
 from models.user import get_user_by_discord_username, update_user
 from models.conversation import get_conversations_by_user_id
-from models.message import get_messages_by_conversation_id
+from models.message import create_message, get_messages_by_conversation_id
 
 
 router = APIRouter(prefix="/api")
@@ -40,6 +40,15 @@ async def get_messages(request: Request, pool = Depends(get_db_pool), user_sessi
         user = await get_user_by_discord_username(connection, user_session["username"])
         messages = await get_messages_by_conversation_id(connection, user.active_conversation_id)
         return messages
+
+
+@router.post("/messages")
+async def post_message(request: Request, pool = Depends(get_db_pool), user_session = Depends(get_user_session)):
+    async with pool.acquire() as connection:
+        user = await get_user_by_discord_username(connection, user_session["username"])
+        data = await request.json()
+        message = await create_message(connection, user, True, data["message_text"])
+        return message
 
 
 @router.get("/logout")
