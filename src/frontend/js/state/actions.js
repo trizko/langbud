@@ -18,8 +18,9 @@ export const setActiveConversationAndMessages = (conversationId, messages) => ({
     messages
 });
 
-export const fetchConversationsSuccess = (conversations) => ({
+export const fetchConversationsSuccess = (conversationId, conversations) => ({
     type: FETCH_CONVERSATIONS_SUCCESS,
+    conversationId,
     conversations
 });
 

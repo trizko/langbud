@@ -64,7 +64,7 @@ export class SidebarComponent extends HTMLElement {
     async fetchConversations() {
         let response = await fetch('/api/conversations');
         let data = await response.json();
-        store.dispatch(fetchConversationsSuccess(data));
+        store.dispatch(fetchConversationsSuccess(data.active_conversation_id, data.conversations));
     }
 
     render() {

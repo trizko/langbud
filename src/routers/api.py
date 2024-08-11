@@ -31,7 +31,7 @@ async def get_conversations(request: Request, pool = Depends(get_db_pool), user_
     async with pool.acquire() as connection:
         user = await get_user_by_discord_username(connection, user_session["username"])
         conversations = await get_conversations_by_user_id(connection, user.user_id)
-        return conversations
+        return { "conversations": conversations, "active_conversation_id": user.active_conversation_id }
 
 
 @router.get("/messages")

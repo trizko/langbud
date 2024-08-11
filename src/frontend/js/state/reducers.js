@@ -30,6 +30,7 @@ const reducer = (state = initialState, action) => {
         case FETCH_CONVERSATIONS_SUCCESS:
             return {
                 ...state,
+                activeConversationId: action.conversationId,
                 conversations: action.conversations,
             };
         case FETCH_CONVERSATIONS_FAILURE:
