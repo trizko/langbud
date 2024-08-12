@@ -270,6 +270,8 @@ async def lifespan(app: FastAPI):
     # Connect to the database
     await database.connect()
     app.state.db = database
+    # Add LLM client to the app state
+    app.state.llm = llm
     yield
     # Close the database connection
     await database.disconnect()
