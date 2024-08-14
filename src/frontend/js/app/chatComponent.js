@@ -122,6 +122,7 @@ export class ChatComponent extends HTMLElement {
                 is_from_user: true
             };
             this.sendMessage(message);
+            messageInput.value = '';
         });
     }
 }
