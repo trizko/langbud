@@ -3,8 +3,9 @@ from fastapi.responses import RedirectResponse
 
 from dependencies import get_db_pool, get_user_session
 from models.user import get_user_by_discord_username, update_user
-from models.conversation import get_conversations_by_user_id
+from models.conversation import get_conversation, get_conversations_by_user_id
 from models.message import create_message, get_messages_by_conversation_id
+from models.utils import format_messages_openai
 
 
 router = APIRouter(prefix="/api")
@@ -48,6 +49,18 @@ async def post_message(request: Request, pool = Depends(get_db_pool), user_sessi
         user = await get_user_by_discord_username(connection, user_session["username"])
         data = await request.json()
         message = await create_message(connection, user, True, data["message_text"])
+        return message
+
+
+@router.get("/messages/generate")
+async def generate_message(request: Request, pool = Depends(get_db_pool), user_session = Depends(get_user_session)):
+    async with pool.acquire() as connection:
+        user = await get_user_by_discord_username(connection, user_session["username"])
+        conversation = await get_conversation(connection, user.active_conversation_id)
+        raw_messages = await get_messages_by_conversation_id(connection, user.active_conversation_id)
+        messages = await format_messages_openai(user, raw_messages, conversation.conversation_language)
+        content = request.app.state.llm.complete(model="gpt-4o", messages=messages)
+        message = await create_message(connection, user, is_from_user=False, message_text=content)
         return message
 
 
