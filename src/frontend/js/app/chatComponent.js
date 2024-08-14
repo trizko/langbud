@@ -94,6 +94,9 @@ export class ChatComponent extends HTMLElement {
         });
         let data = await response.json();
         store.dispatch(addMessageSuccess(data));
+        let botResponse = await fetch('/api/messages/generate')
+        let botData = await botResponse.json();
+        store.dispatch(addMessageSuccess(botData));
     }
 
     render() {
