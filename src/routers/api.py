@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse
 
 from dependencies import get_db_pool, get_user_session
 from models.user import get_user_by_discord_username, update_user
-from models.conversation import get_conversation, get_conversations_by_user_id
+from models.conversation import get_conversation, get_conversations_by_user_id, create_conversation
 from models.message import create_message, get_messages_by_conversation_id
 from models.utils import format_messages_openai
 
@@ -33,6 +33,16 @@ async def get_conversations(request: Request, pool = Depends(get_db_pool), user_
         user = await get_user_by_discord_username(connection, user_session["username"])
         conversations = await get_conversations_by_user_id(connection, user.user_id)
         return { "conversations": conversations, "active_conversation_id": user.active_conversation_id }
+
+
+@router.post("/conversations")
+async def create_conversation(request: Request, pool = Depends(get_db_pool), user_session = Depends(get_user_session)):
+    async with pool.acquire() as connection:
+        user = await get_user_by_discord_username(connection, user_session["username"])
+        data = await request.json()
+        conversation = await create_conversation(connection, user.user_id, data["conversation_language"])
+        user = await update_user(connection, user.user_id, conversation.conversation_id)
+        return conversation
 
 
 @router.get("/messages")
