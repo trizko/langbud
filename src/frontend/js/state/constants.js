@@ -9,6 +9,5 @@ export const LANGUAGE_MAPPING = {
     "tr":  "Turkish",
     "pt-BR": "Brazilian Portuguese",
     "jp":  "Japanese",
-    "ar":  "Arabic",
-    "new": "New"
+    "ar":  "Arabic"
 }
