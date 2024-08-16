@@ -135,6 +135,8 @@ export class SidebarComponent extends HTMLElement {
         addButton.addEventListener('click', () => {
             console.log(dropdown.style);
             dropdown.style.display = 'block';
+            dropdown.focus();
+            dropdown.size = dropdown.options.length;
             addButton.style.display = 'none';
         });
 
