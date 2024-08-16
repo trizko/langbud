@@ -62,6 +62,7 @@ export class SidebarComponent extends HTMLElement {
         this.unsubscribe = store.subscribe(() => this.render());
         this.fetchConversations();
         this.addEventListeners();
+        this.populateLanguageDropdown();
     }
 
     disconnectedCallback() {
@@ -102,6 +103,16 @@ export class SidebarComponent extends HTMLElement {
                 store.dispatch(setActiveConversationAndMessages(user.active_conversation_id, messages));
             });
         });
+    }
+
+    populateLanguageDropdown() {
+        const dropdown = this.shadowRoot.getElementById('languageDropdown');
+        dropdown.innerHTML = `
+            <option value="">Select a language</option>
+            ${Object.entries(LANGUAGE_MAPPING).map(([key, value]) => `
+                <option value="${key}">${value}</option>
+            `).join('')}
+        `;
     }
 
     addEventListeners() {
