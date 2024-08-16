@@ -115,6 +115,19 @@ export class SidebarComponent extends HTMLElement {
         `;
     }
 
+    async createNewConversation(language) {
+        const response = await fetch('/api/conversations', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ language }),
+        });
+        const newConversation = await response.json();
+        await this.fetchConversations();
+        store.dispatch(setActiveConversationAndMessages(newConversation.conversation_id, []));
+    }
+
     addEventListeners() {
         const addButton = this.shadowRoot.getElementById('addConversationBtn');
         addButton.addEventListener('click', () => {});
