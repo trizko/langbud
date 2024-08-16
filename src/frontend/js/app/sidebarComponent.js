@@ -42,11 +42,18 @@ export class SidebarComponent extends HTMLElement {
                 #addConversationBtn:hover {
                     background-color: #45a049;
                 }
+                #languageDropdown {
+                    display: none;
+                    width: 100%;
+                    padding: 5px;
+                    margin-top: 5px;
+                }
             </style>
             <div>
                 <h2>Conversations</h2>
                 <ul id="conversationList"></ul>
                 <button id="addConversationBtn">+ New Conversation</button>
+                <select id="languageDropdown"></select>
             </div>
         `;
     }
