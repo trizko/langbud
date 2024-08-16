@@ -40,7 +40,7 @@ async def post_conversation(request: Request, pool = Depends(get_db_pool), user_
     async with pool.acquire() as connection:
         user = await get_user_by_discord_username(connection, user_session["username"])
         data = await request.json()
-        conversation = await create_conversation(connection, user.user_id, data["language"])
+        conversation = await create_conversation(connection, user, data["language"])
         user = await update_user(connection, user.user_id, conversation.conversation_id)
         return conversation
 
