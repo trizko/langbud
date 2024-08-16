@@ -130,6 +130,22 @@ export class SidebarComponent extends HTMLElement {
 
     addEventListeners() {
         const addButton = this.shadowRoot.getElementById('addConversationBtn');
-        addButton.addEventListener('click', () => {});
+        const dropdown = this.shadowRoot.getElementById('languageDropdown');
+
+        addButton.addEventListener('click', () => {
+            console.log(dropdown.style);
+            dropdown.style.display = 'block';
+            addButton.style.display = 'none';
+        });
+
+        dropdown.addEventListener('change', async (e) => {
+            const selectedLanguage = e.target.value;
+            if (selectedLanguage) {
+                await this.createNewConversation(selectedLanguage);
+                addButton.style.display = 'block';
+                dropdown.style.display = 'none';
+                dropdown.value = '';
+            }
+        });
     }
 }
