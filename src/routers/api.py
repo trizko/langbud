@@ -36,7 +36,7 @@ async def get_conversations(request: Request, pool = Depends(get_db_pool), user_
 
 
 @router.post("/conversations")
-async def create_conversation(request: Request, pool = Depends(get_db_pool), user_session = Depends(get_user_session)):
+async def post_conversation(request: Request, pool = Depends(get_db_pool), user_session = Depends(get_user_session)):
     async with pool.acquire() as connection:
         user = await get_user_by_discord_username(connection, user_session["username"])
         data = await request.json()
