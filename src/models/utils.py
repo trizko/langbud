@@ -1,4 +1,3 @@
-import asyncpg
 
 from typing import List
 
